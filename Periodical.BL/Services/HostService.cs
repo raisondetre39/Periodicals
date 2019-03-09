@@ -5,6 +5,8 @@ using Periodicals.DAL.UnitOfWork;
 using Periodicals.DAL.Accounts;
 using System;
 using Periodicals.DAL.Publishings;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Periodical.BL.Services
 {
@@ -38,10 +40,10 @@ namespace Periodical.BL.Services
             }
         }
 
-        public ClaimsIdentity Authenticate(HostDTO hostDto)
+        public ClaimsIdentity Authenticate(HostDTO hostDto, string role)
         {
             ClaimsIdentity claim = null;
-            Host host = Database.Hosts.GetByAuthenfication(hostDto.Email, hostDto.Password);
+            Host host = Database.Hosts.GetByAuthenfication(hostDto.Email, hostDto.Password, role);
             if (host != null)
             {
                 claim = new ClaimsIdentity("ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
@@ -55,14 +57,9 @@ namespace Periodical.BL.Services
 
         public OperationSatus EditUser(HostDTO host)
         {
-            Host hostEdited = Database.Hosts.GetHost(host.Email);
-            hostEdited.Name = host.Name;
-            hostEdited.Password = host.Password;
-            hostEdited.ProfilePicture = host.ProfilePicture;
-            hostEdited.Vallet = host.Vallet;
-            if (hostEdited != null)
+            if (host != null)
             {
-                Database.Hosts.UpdateHost(hostEdited);
+                Database.Hosts.UpdateHost(HostDTO.ToHost(host));
                 return new OperationSatus(true, "Changes were succsesfull", "");
             }
             else
@@ -83,20 +80,14 @@ namespace Periodical.BL.Services
         }
 
 
-        OperationSatus IUserService.CreateMagasine(MagazineDTO magazineDTO, int authorId)
+        public OperationSatus CreateMagazine(MagazineDTO magazineDTO, HostDTO author)
         {
-            Magazine magazine = new Magazine()
-            {
-                MagazineName = magazineDTO.MagazineName,
-                HostId = authorId,
-                Cover = magazineDTO.Cover,
-                Description = magazineDTO.Description,
-                Tags = magazineDTO.Tags,
-                Price = magazineDTO.Price
-            };
+            Magazine magazine = MagazineDTO.ToMagazine(magazineDTO, author.Id);
             if (magazine != null)
             {
                 Database.Hosts.CreateMagazine(magazine);
+                AddUserMagazine(author, magazine.MagazineId);
+
                 return new OperationSatus(true, "Create was succsesfull", "");
             }
             else
@@ -105,17 +96,13 @@ namespace Periodical.BL.Services
             }
         }
 
-        OperationSatus IUserService.EditMagazine(MagazineDTO magazineDTO)
+        public OperationSatus EditMagazine(MagazineDTO magazineDTO)
         {
-            Magazine magazineEdited = Database.Hosts.GetMagazine(magazineDTO.Id);
-            magazineEdited.MagazineName = magazineDTO.MagazineName;
-            magazineEdited.Cover = magazineDTO.Cover;
-            magazineEdited.Description = magazineDTO.Description;
-            magazineEdited.Tags = magazineDTO.Tags;
-            magazineEdited.Price = magazineDTO.Price;
+            Magazine magazineEdited = MagazineDTO.ToMagazine(magazineDTO, magazineDTO.HostId);
             if (magazineEdited != null)
             {
                 Database.Hosts.UpdateMagazine(magazineEdited);
+
                 return new OperationSatus(true, "Update was succsesfull", "");
             }
             else
@@ -126,7 +113,7 @@ namespace Periodical.BL.Services
 
         public OperationSatus AddUserMagazine(HostDTO userDTO, int magasineId)
         {
-            Host hostEdited = Database.Hosts.GetHost(userDTO.Email);
+            Host hostEdited = Database.Hosts.GetHostById(userDTO.Id);
             hostEdited.Magazines.Add(Database.Hosts.GetMagazine(magasineId));
             if (hostEdited != null)
             {
@@ -139,13 +126,16 @@ namespace Periodical.BL.Services
             }
         }
 
-        public OperationSatus DeleteUserMagazine(HostDTO userDTO, int magasineId)
+        public OperationSatus DeleteUserMagazine(HostDTO userDTO, int? magasineId)
         {
-            Host hostEdited = Database.Hosts.GetHost(userDTO.Email);
+            Host hostEdited = Database.Hosts.GetHostById(userDTO.Id);
             hostEdited.Magazines.Remove(Database.Hosts.GetMagazine(magasineId));
+            Magazine magazine = Database.Hosts.GetMagazine(magasineId);
+            magazine.Hosts.Remove(hostEdited);
             if (hostEdited != null)
             {
                 Database.Hosts.UpdateHost(hostEdited);
+                Database.Hosts.UpdateMagazine(magazine);
                 return new OperationSatus(true, "Changes were succsesfull", "");
             }
             else
@@ -182,6 +172,68 @@ namespace Periodical.BL.Services
             {
                 return new OperationSatus(false, "Something went wrong", "ProfileChange");
             }
+        }
+
+        public HostDTO GetHost(string email)
+        {
+            return HostDTO.ToHostDTO(Database.Hosts.GetHost(email));
+        }
+
+        public MagazineDTO GetMagazine(int? id)
+        {
+            Magazine magazine = Database.Hosts.GetMagazine(id);
+            MagazineDTO magazineDTO = MagazineDTO.ToMagazineDTO(magazine);
+            return magazineDTO;
+        }
+
+        public MagazineDTO GetMagazine(string name)
+        {
+            Magazine magazine = Database.Hosts.GetMagazine(name);
+            if(magazine != null)
+            {
+                MagazineDTO magazineDTO = MagazineDTO.ToMagazineDTO(magazine);
+                return magazineDTO;
+            }
+            return null;
+        }
+
+        public IEnumerable<HostDTO> GetAllHosts()
+        {
+            return Database.Hosts.GetAllHosts()
+                .Select(host => HostDTO.ToHostDTO(host));
+        }
+
+        public IEnumerable<HostDTO> GetAllAuthors()
+        {
+            return Database.Hosts.GetAllAuthors()
+                .Select(host => HostDTO.ToHostDTO(host));
+        }
+
+        public IEnumerable<Tag> GetAllTags()
+        {
+            return Database.Hosts.GetAllTags();
+        }
+
+        public IEnumerable<MagazineDTO> GetAllMagazines()
+        {
+            return Database.Hosts.GetAllMagazines()
+                .Select(magazine => MagazineDTO.ToMagazineDTO(magazine));
+        }
+
+        public HostDTO GetHostById(int id)
+        {
+            HostDTO hostDTO =  HostDTO.ToHostDTO(Database.Hosts.GetHostById(id));
+            hostDTO.Magazines = Database.Hosts.GetUserMagazines(id)
+                .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
+                .ToList();
+            return hostDTO;
+        }
+
+        public OperationSatus DeleteMagazine(int? id)
+        {
+            Magazine magazine = Database.Hosts.GetMagazine(id);
+            Database.Hosts.DeleteMagazine(id);
+            return new OperationSatus(true, "Delete was succsesfull", "");
         }
     }
 }

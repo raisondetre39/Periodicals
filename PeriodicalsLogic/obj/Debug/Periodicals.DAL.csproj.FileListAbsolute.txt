@@ -23,5 +23,5 @@ C:\Users\detre\OneDrive\Рабочий стол\Epam Project\Periodicals\Periodi
 C:\Users\detre\OneDrive\Рабочий стол\Epam Project\Periodicals\PeriodicalsLogic\bin\Debug\Periodicals.DAL.pdb
 C:\Users\detre\OneDrive\Рабочий стол\Epam Project\Periodicals\PeriodicalsLogic\obj\Debug\Periodicals.DAL.dll
 C:\Users\detre\OneDrive\Рабочий стол\Epam Project\Periodicals\PeriodicalsLogic\obj\Debug\Periodicals.DAL.pdb
-C:\Users\detre\OneDrive\Рабочий стол\Epam Project\Periodicals\PeriodicalsLogic\obj\Debug\Periodicals.DAL.Migrations.userChange.resources
+C:\Users\detre\OneDrive\Рабочий стол\Epam Project\Periodicals\PeriodicalsLogic\obj\Debug\Periodicals.DAL.Migrations.tagMagazineRelatiom.resources
 C:\Users\detre\OneDrive\Рабочий стол\Epam Project\Periodicals\PeriodicalsLogic\obj\Debug\Periodicals.DAL.csproj.GenerateResource.cache

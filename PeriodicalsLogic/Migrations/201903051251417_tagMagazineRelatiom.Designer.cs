@@ -7,13 +7,13 @@ namespace Periodicals.DAL.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class userChange : IMigrationMetadata
+    public sealed partial class tagMagazineRelatiom : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(userChange));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(tagMagazineRelatiom));
         
         string IMigrationMetadata.Id
         {
-            get { return "201903012124018_userChange"; }
+            get { return "201903051251417_tagMagazineRelatiom"; }
         }
         
         string IMigrationMetadata.Source

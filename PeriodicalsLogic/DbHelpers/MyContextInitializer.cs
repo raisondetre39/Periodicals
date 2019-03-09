@@ -6,9 +6,9 @@ using System.Data.Entity;
 
 namespace Periodicals.DAL.DbHelpers
 {
-    public class MyContextInitializer : DropCreateDatabaseAlways<PeriodicalContext>
+    public class MyContextInitializer : DropCreateDatabaseAlways<PeriodicalsContext>
     {
-        protected override void Seed(PeriodicalContext db)
+        protected override void Seed(PeriodicalsContext db)
         {
             Tag tag1 = new Tag() { TagName = "social" };
             Tag tag2 = new Tag() { TagName = "fashion" };
@@ -24,13 +24,24 @@ namespace Periodicals.DAL.DbHelpers
             Host host1 = new Host()
             {
                 Id = 2,
+                Role = "Author",
                 Name = "Emily Clark",
                 Password = "clark",
                 Email = "clark@gmail.com"
             };
 
+            Host host4 = new Host()
+            {
+                Id = 4,
+                Role = "Author",
+                Name = "Amily Hatson",
+                Password = "amily",
+                Email = "amily@gmail.com"
+            };
+
             Magazine magazine1 = new Magazine()
             {
+                MagazineId = 1,
                 MagazineName = "Times",
                 HostId = 2,
                 Description = "The Times is a British daily (Monday to Saturday)" +
@@ -45,31 +56,51 @@ namespace Periodicals.DAL.DbHelpers
                 PublishDate = DateTime.Now
             };
 
-            host1.Magazines.Add(magazine1);
+            Magazine magazine2 = new Magazine()
+            {
+                MagazineId = 2,
+                MagazineName = "National Geographic",
+                HostId = 4,
+                Description = "National Geographic(formerly the National Geographic Magazine and branded also as NAT GEO) " +
+                "is the official magazine of the National Geographic Society.It has been published continuously since its first issue in 1888," +
+                "nine months after the Society itself was founded.It primarily contains articles about science," +
+                "geography, history,and world culture. The magazine is known for its thick square " +
+                "- bound glossy format with a yellow rectangular border and its extensive use of dramatic photographs.Controlling interest in the magazine has been held by 21st Century Fox since 2015.",
+                Price = 400,
+                Tags = new List<Tag>() { tag5, tag9 },
+                PublishDate = DateTime.Now
+            };
 
+            host1.Magazines.Add(magazine1);
+            host4.Magazines.Add(magazine2);
             Host host2 = new Host()
             {
-                Id = 1,
+                Id = 0,
+                Role = "User",
                 Name = "Yuliia Zelenska",
+                ProfilePicture = "/Content/images/profileTest.jpg",
                 Email = "detre39@gmail.com",
                 Magazines = new List<Magazine>() { magazine1 },
-                Vallet = 1000,
+                Wallet = 1000,
                 Password = "detre39"
             };
+
+            magazine1.Hosts.Add(host2);
+            host2.Magazines.Add(magazine1);
 
             Host host3 = new Host()
             {
                 Id = 3,
                 Name = "admin",
+                Role = "Admin",
                 Email = "admin@gmail.com",
                 Password = "admin"
             };
 
 
-            db.Hosts.AddRange(new List<Host>() { host2, host1, host3 });
-            db.Tags.AddRange(new List<Tag>() { tag1, tag2 });
-            db.Magazines.Add(magazine1);
-            
+            db.Hosts.AddRange(new List<Host>() { host2, host1, host3, host4 });
+            db.Tags.AddRange(new List<Tag>() { tag1, tag2, tag3, tag4, tag5, tag6, tag7, tag8, tag9, tag10 });
+            db.Magazines.AddRange(new List<Magazine>() { magazine1, magazine2 });
         }
     }
 }

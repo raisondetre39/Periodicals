@@ -7,12 +7,12 @@ namespace Periodicals.DAL.UnitOfWork
     // Class incapsulates all entity managers in the form of properties and stores the general data context.
     public class UnitOfWork : IDisposable
     {
-        private PeriodicalContext db;
+        private PeriodicalsContext db;
         private HostRepository hostRepository;
 
         public UnitOfWork(string connectionString)
         {
-            db = new PeriodicalContext(connectionString);
+            db = new PeriodicalsContext(connectionString);
         }
 
         public HostRepository Hosts
@@ -27,11 +27,16 @@ namespace Periodicals.DAL.UnitOfWork
             }
         }
 
-        public void Save()
+        public void SaveAsync()
         {
             db.SaveChanges();
         }
 
+        public void Dispose()
+        {
+            Dispose(false);
+            GC.SuppressFinalize(this);
+        }
         private bool disposed = false;
 
         public virtual void Dispose(bool disposing)
@@ -40,16 +45,10 @@ namespace Periodicals.DAL.UnitOfWork
             {
                 if (disposing)
                 {
-                    db.Dispose();
+                    hostRepository.Dispose();
                 }
                 this.disposed = true;
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

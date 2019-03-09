@@ -5,9 +5,9 @@ namespace Periodicals.DAL.Repository
 {
     interface IRepository<T> where T : class
     {
-        IEnumerable<T> GetAllHosts();
-        IEnumerable<T> GetAllAuthors();
-        IEnumerable<Magazine> GetAllMagazines();
+        List<T> GetAllHosts();
+        List<T> GetAllAuthors();
+        List<Magazine> GetAllMagazines();
         void CreateHost(T item);
         void CreateHost(T item, string password = "");
         void CreateAuthor(T item, string password = "");
@@ -15,6 +15,6 @@ namespace Periodicals.DAL.Repository
         void UpdateHost(T item);
         void UpdateMagazine(Magazine item);
         void DeleteUser(int id);
-        void DeleteMagazine(int id);
+        void DeleteMagazine(int? id);
     }
 }

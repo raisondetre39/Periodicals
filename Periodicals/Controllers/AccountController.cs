@@ -7,6 +7,7 @@ using Periodical.BL.Services;
 using Microsoft.AspNet.Identity.Owin;
 using Periodical.BL.DataTemporaryModels;
 using System.Threading.Tasks;
+using Periodical.BL.Infrastructure;
 
 namespace Periodicals.Controllers
 {
@@ -45,7 +46,7 @@ namespace Periodicals.Controllers
             if (ModelState.IsValid)
             {
                 HostDTO userDto = userDto = new HostDTO { Email = model.Email, Password = model.Password };
-                ClaimsIdentity claim = HostService.Authenticate(userDto);
+                ClaimsIdentity claim = HostService.Authenticate(userDto, Request.Params["role"]);
                 if (claim == null)
                 {
                     ModelState.AddModelError("", "Uncorrect login or password");
@@ -57,7 +58,7 @@ namespace Periodicals.Controllers
                     {
                         IsPersistent = true
                     }, claim);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToRoute(new { area = $"{Request.Params["role"]}", controller = $"{Request.Params["role"]}Account", action = $"{Request.Params["role"]}Account" });
                 }
             }
             return View();
@@ -69,5 +70,31 @@ namespace Periodicals.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public ActionResult Register()
+        {
+            return View("Register");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Register(RegisterModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                HostDTO hostDto = new HostDTO
+                {
+                    Email = model.Email,
+                    Password = model.Password,
+                    Name = model.Name,
+                    Wallet = model.Wallet
+                };
+                OperationSatus operationDetails = HostService.CreateUser(hostDto, Request.Params["role2"]);
+                if (operationDetails.Succedeed)
+                    return View("SuccessRegister");
+                else
+                    ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
+            }
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

@@ -72,12 +72,13 @@
     <Compile Include="Accounts\Host.cs" />
     <Compile Include="DbHelpers\MyContextInitializer.cs" />
     <Compile Include="DbHelpers\PeriodicalContext.cs" />
-    <Compile Include="Migrations\201903012124018_userChange.cs" />
-    <Compile Include="Migrations\201903012124018_userChange.Designer.cs">
-      <DependentUpon>201903012124018_userChange.cs</DependentUpon>
+    <Compile Include="Migrations\201903051251417_tagMagazineRelatiom.cs" />
+    <Compile Include="Migrations\201903051251417_tagMagazineRelatiom.Designer.cs">
+      <DependentUpon>201903051251417_tagMagazineRelatiom.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Publishings\HostMagazine.cs" />
     <Compile Include="Publishings\Magazine.cs" />
     <Compile Include="Publishings\Tag.cs" />
     <Compile Include="Repository\IRepository.cs" />
@@ -89,8 +90,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201903012124018_userChange.resx">
-      <DependentUpon>201903012124018_userChange.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903051251417_tagMagazineRelatiom.resx">
+      <DependentUpon>201903051251417_tagMagazineRelatiom.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

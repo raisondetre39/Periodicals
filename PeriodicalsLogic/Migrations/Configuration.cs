@@ -5,14 +5,19 @@ namespace Periodicals.DAL.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Periodicals.DAL.DbHelpers.PeriodicalContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Periodicals.DAL.DbHelpers.PeriodicalsContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Periodicals.DAL.DbHelpers.PeriodicalContext context)
-        { }
+        protected override void Seed(Periodicals.DAL.DbHelpers.PeriodicalsContext context)
+        {
+            //  This method will be called after migrating to the latest version.
+
+            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
+            //  to avoid creating duplicate seed data.
+        }
     }
 }

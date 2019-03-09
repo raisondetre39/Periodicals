@@ -7,6 +7,7 @@ namespace Periodicals.Models
         [Required]
         [Display(Name = "Email")]
         [EmailAddress]
+        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Invalid adress")]
         public string Email { get; set; }
 
         [Required]
@@ -21,7 +22,14 @@ namespace Periodicals.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Invalid adress")]
         public string Email { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [DataType(DataType.Currency)]
+        public int Wallet { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]

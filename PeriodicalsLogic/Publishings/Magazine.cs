@@ -16,12 +16,14 @@ namespace Periodicals.DAL.Publishings
         [DataType(DataType.Currency)]
         public int Price { get; set; }
         public string Cover { get; set; }
-        public List<Tag> Tags { get; set; }
+        public virtual List<Tag> Tags { get; set; }
+        public virtual List<Host> Hosts { get; set; }
         public int? HostId { get; set; }
         public Host Host { get; set; }
         public Magazine()
         {
             Tags = new List<Tag>();
+            Hosts = new List<Host>(); 
         }
     }
 }
