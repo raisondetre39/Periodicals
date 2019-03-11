@@ -3,7 +3,6 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using Periodical.BL.Services;
-using Periodical.BL.ServiseInterfaces;
 
 [assembly: OwinStartup(typeof(Periodicals.Startup))]
 
@@ -22,9 +21,24 @@ namespace Periodicals
             });
         }
 
-        private HostService CreateHostService()
+        public HostService CreateHostService()
         {
             return serviceCreator.CreateHostService("DefaultConnection");
+        }
+
+        public MagazineService CreateMagazineService()
+        {
+            return serviceCreator.CreateMagazineService("DefaultConnection");
+        }
+
+        public TagService CreateTagService()
+        {
+            return serviceCreator.CreateTagService("DefaultConnection");
+        }
+
+        public HostMagazineService CreateHostMagazineService()
+        {
+            return serviceCreator.CreateHostMagazineService("DefaultConnection");
         }
     }
 }

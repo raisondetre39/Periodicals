@@ -12,24 +12,50 @@ namespace Periodicals.Areas.Author.Controllers
 {
     public class AuthorAccountController : Controller
     {
+        Startup startup = new Startup();
+
         private HostService HostService
         {
             get
             {
-                return HttpContext.GetOwinContext().GetUserManager<HostService>();
+                return startup.CreateHostService();
+            }
+        }
+
+        private HostMagazineService HostMagazineService
+        {
+            get
+            {
+                return startup.CreateHostMagazineService();
+            }
+        }
+
+        private TagService TagService
+        {
+            get
+            {
+                return startup.CreateTagService();
+            }
+        }
+
+        private MagazineService MagazineService
+        {
+            get
+            {
+                return startup.CreateMagazineService();
             }
         }
 
         public ActionResult AuthorAccount()
         {
-            HostDTO hostDTO = HostService.GetHostById(Convert.ToInt32(User.Identity.GetUserId()));
-            ViewBag.Magazines = hostDTO.Magazines;
+            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
+            ViewBag.Magazines = HostMagazineService.GetUserMagazines(hostDTO.Id);
             return View("AuthorAccount", hostDTO);
         }
 
         public ActionResult EditAuthor()
         {
-            HostDTO hostDTO = HostService.GetHostById(Convert.ToInt32(User.Identity.GetUserId()));
+            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             return View("EditAuthor", hostDTO);
         }
 
@@ -39,21 +65,21 @@ namespace Periodicals.Areas.Author.Controllers
         {
             hostDTO.Id = Convert.ToInt32(User.Identity.GetUserId());
             hostDTO.Role = "Author";
-            HostService.EditUser(hostDTO);
+            HostService.Edit(hostDTO);
             return AuthorAccount();
         }
 
         public ActionResult DeleteAuthorMagazine(int? Id)
         {
-            HostDTO hostDTO = HostService.GetHostById(Convert.ToInt32(User.Identity.GetUserId()));
-            HostService.DeleteMagazine(Id);
+            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
+            MagazineService.Delete(Id);
             return AuthorAccount();
         }
 
         public ActionResult EditMagazine(int? id)
         {
-            MagazineDTO magazine = HostService.GetMagazine(id);
-            ViewBag.Tags = HostService.GetAllTags();
+            MagazineDTO magazine = MagazineService.GetById(id);
+            ViewBag.Tags = TagService.GetAll();
             return View("EditMagazine", magazine);
         }
 
@@ -64,18 +90,18 @@ namespace Periodicals.Areas.Author.Controllers
             magazine.Tags.Clear();
             if (selectedTags != null)
             {
-                foreach (var tag in HostService.GetAllTags().Where(tag => selectedTags.Contains(tag.TagId)))
+                foreach (var tag in TagService.GetAll().Where(tag => selectedTags.Contains(tag.TagId)))
                 {
                     magazine.Tags.Add(tag);
                 }
             }
-            HostService.EditMagazine(magazine);
+            MagazineService.Edit(magazine);
             return AuthorAccount();
         }
 
         public ActionResult CreateMagazine()
         {
-            ViewBag.Tags = HostService.GetAllTags();
+            ViewBag.Tags = TagService.GetAll();
             return View("CreateMagazine");
         }
 
@@ -85,12 +111,12 @@ namespace Periodicals.Areas.Author.Controllers
         {
             if (selectedTags != null)
             {
-                foreach (var tag in HostService.GetAllTags().Where(tag => selectedTags.Contains(tag.TagId)))
+                foreach (var tag in TagService.GetAll().Where(tag => selectedTags.Contains(tag.TagId)))
                 {
                     magazine.Tags.Add(tag);
                 }
             }
-            HostService.CreateMagazine(magazine, HostService.GetHostById(Convert.ToInt32(User.Identity.GetUserId())));
+            MagazineService.Create(magazine, HostService.GetById(Convert.ToInt32(User.Identity.GetUserId())));
             return AuthorAccount();
         }
     }

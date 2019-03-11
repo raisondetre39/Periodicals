@@ -72,17 +72,18 @@
     <Compile Include="Accounts\Host.cs" />
     <Compile Include="DbHelpers\MyContextInitializer.cs" />
     <Compile Include="DbHelpers\PeriodicalContext.cs" />
-    <Compile Include="Migrations\201903051251417_tagMagazineRelatiom.cs" />
-    <Compile Include="Migrations\201903051251417_tagMagazineRelatiom.Designer.cs">
-      <DependentUpon>201903051251417_tagMagazineRelatiom.cs</DependentUpon>
+    <Compile Include="Migrations\201903111322194_hostChange.cs" />
+    <Compile Include="Migrations\201903111322194_hostChange.Designer.cs">
+      <DependentUpon>201903111322194_hostChange.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Publishings\HostMagazine.cs" />
     <Compile Include="Publishings\Magazine.cs" />
     <Compile Include="Publishings\Tag.cs" />
-    <Compile Include="Repository\IRepository.cs" />
-    <Compile Include="Repository\HostRepository.cs" />
+    <Compile Include="Publishings\TagMagazine.cs" />
+    <Compile Include="Repository\GenericRepository.cs" />
+    <Compile Include="Repository\IGenericRepository.cs" />
     <Compile Include="UnitOfWork\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -90,8 +91,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201903051251417_tagMagazineRelatiom.resx">
-      <DependentUpon>201903051251417_tagMagazineRelatiom.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903111322194_hostChange.resx">
+      <DependentUpon>201903111322194_hostChange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -32,7 +32,6 @@ namespace Periodical.BL.DataTemporaryModels
                 Description = magazineDTO.Description,
                 Tags = magazineDTO.Tags,
                 Price = magazineDTO.Price
-                //Hosts = magazineDTO.Hosts.Select(host => HostDTO.ToHost(host)).ToList()
             };
             return magazine;
         }
@@ -47,7 +46,6 @@ namespace Periodical.BL.DataTemporaryModels
                 Description = magazineDTO.Description,
                 Tags = magazineDTO.Tags,
                 Price = magazineDTO.Price
-                //Hosts = magazineDTO.Hosts.Select(host => HostDTO.ToHost(host)).ToList()
             };
             return magazine;
         }
@@ -63,7 +61,6 @@ namespace Periodical.BL.DataTemporaryModels
                 Tags = magazine.Tags,
                 Price = magazine.Price,
                 MagazineName = magazine.MagazineName
-                //Hosts = magazine.Hosts.Select(host => HostDTO.ToHostDTO(host)).ToList()
             };
             return magazineDTO;
         }

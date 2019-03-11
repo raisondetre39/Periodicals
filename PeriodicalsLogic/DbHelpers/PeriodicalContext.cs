@@ -12,10 +12,7 @@ namespace Periodicals.DAL.DbHelpers
             Database.SetInitializer(new MyContextInitializer());
         }
 
-        public PeriodicalsContext()
-        {
-            
-        }
+        public PeriodicalsContext() { }
 
         public DbSet<Host> Hosts { get; set; }
         public DbSet<Magazine> Magazines { get; set; }

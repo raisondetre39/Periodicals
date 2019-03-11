@@ -4,22 +4,23 @@ using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using Periodical.BL.Services;
-using Microsoft.AspNet.Identity.Owin;
 using Periodical.BL.DataTemporaryModels;
-using System.Threading.Tasks;
 using Periodical.BL.Infrastructure;
 
 namespace Periodicals.Controllers
 {
     public class AccountController : Controller
     {
+        Startup startup = new Startup();
+
         private HostService HostService
         {
             get
             {
-                return HttpContext.GetOwinContext().GetUserManager<HostService>();
+                return startup.CreateHostService();
             }
         }
+
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -46,7 +47,7 @@ namespace Periodicals.Controllers
             if (ModelState.IsValid)
             {
                 HostDTO userDto = userDto = new HostDTO { Email = model.Email, Password = model.Password };
-                ClaimsIdentity claim = HostService.Authenticate(userDto, Request.Params["role"]);
+                ClaimsIdentity claim = HostService.Authenticate(userDto);
                 if (claim == null)
                 {
                     ModelState.AddModelError("", "Uncorrect login or password");
@@ -58,7 +59,7 @@ namespace Periodicals.Controllers
                     {
                         IsPersistent = true
                     }, claim);
-                    return RedirectToRoute(new { area = $"{Request.Params["role"]}", controller = $"{Request.Params["role"]}Account", action = $"{Request.Params["role"]}Account" });
+                    return RedirectToAction("Index", "Home");
                 }
             }
             return View();
@@ -86,11 +87,28 @@ namespace Periodicals.Controllers
                     Email = model.Email,
                     Password = model.Password,
                     Name = model.Name,
-                    Wallet = model.Wallet
+                    Wallet = model.Wallet,
+                    Role = Request.Params["role2"]
+
                 };
-                OperationSatus operationDetails = HostService.CreateUser(hostDto, Request.Params["role2"]);
+                OperationStatus operationDetails = HostService.Create(hostDto, Request.Params["role2"]);
                 if (operationDetails.Succedeed)
-                    return View("SuccessRegister");
+                {
+                    ClaimsIdentity claim = HostService.Authenticate(hostDto);
+                    if (claim == null)
+                    {
+                        ModelState.AddModelError("", "Smth went wrong");
+                    }
+                    else
+                    {
+                        AuthenticationManager.SignOut();
+                        AuthenticationManager.SignIn(new AuthenticationProperties
+                        {
+                            IsPersistent = true
+                        }, claim);
+                        return RedirectToRoute(new { area = $"{Request.Params["role2"]}", controller = $"{Request.Params["role2"]}Account", action = $"{Request.Params["role2"]}Account" });
+                    }
+                }
                 else
                     ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }

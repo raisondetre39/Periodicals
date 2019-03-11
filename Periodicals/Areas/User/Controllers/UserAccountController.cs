@@ -4,8 +4,6 @@ using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Services;
 using Periodicals.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -13,18 +11,29 @@ namespace Periodicals.Areas.User.Controllers
 {
     public class UserAccountController : Controller
     {
+        Startup startup = new Startup();
+
         private HostService HostService
         {
             get
             {
-                return HttpContext.GetOwinContext().GetUserManager<HostService>();
+                return startup.CreateHostService();
+            }
+        }
+
+
+        private HostMagazineService HostMagazineService
+        {
+            get
+            {
+                return startup.CreateHostMagazineService();
             }
         }
 
         public ActionResult UserAccount()
         {
-            HostDTO hostDTO = HostService.GetHostById(Convert.ToInt32(User.Identity.GetUserId()));
-            ViewBag.Magazines = hostDTO.Magazines;
+            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
+            ViewBag.Magazines = HostMagazineService.GetUserMagazines(hostDTO.Id);
             return View("UserAccount", hostDTO);
         }
 
@@ -38,15 +47,15 @@ namespace Periodicals.Areas.User.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditWallet(DebitCardModel debitCardModel)
         {
-            HostDTO hostDTO = HostService.GetHostById(Convert.ToInt32(User.Identity.GetUserId()));
+            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             hostDTO.Wallet += debitCardModel.Sum;
-            HostService.EditUser(hostDTO);
+            HostService.Edit(hostDTO);
             return UserAccount();
         }
 
         public ActionResult EditUser()
         {
-            HostDTO hostDTO = HostService.GetHostById(Convert.ToInt32(User.Identity.GetUserId()));
+            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             return View("EditUser", hostDTO);
         }
 
@@ -56,14 +65,14 @@ namespace Periodicals.Areas.User.Controllers
         {
             hostDTO.Id = Convert.ToInt32(User.Identity.GetUserId());
             hostDTO.Role = "User";
-            HostService.EditUser(hostDTO);
+            HostService.Edit(hostDTO);
             return UserAccount();
         }
 
         public ActionResult DeleteUserMagazine(int? Id)
         {
-            HostDTO hostDTO = HostService.GetHostById(Convert.ToInt32(User.Identity.GetUserId()));
-            HostService.DeleteUserMagazine(hostDTO, Id);
+            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
+            HostMagazineService.Delete(hostDTO, Id);
             return UserAccount();
         }
     }

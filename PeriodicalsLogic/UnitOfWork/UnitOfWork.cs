@@ -1,4 +1,6 @@
-﻿using Periodicals.DAL.DbHelpers;
+﻿using Periodicals.DAL.Accounts;
+using Periodicals.DAL.DbHelpers;
+using Periodicals.DAL.Publishings;
 using Periodicals.DAL.Repository;
 using System;
 
@@ -8,26 +10,19 @@ namespace Periodicals.DAL.UnitOfWork
     public class UnitOfWork : IDisposable
     {
         private PeriodicalsContext db;
-        private HostRepository hostRepository;
 
         public UnitOfWork(string connectionString)
         {
             db = new PeriodicalsContext(connectionString);
         }
 
-        public HostRepository Hosts
-        {
-            get
-            {
-                if (hostRepository == null)
-                {
-                    hostRepository = new HostRepository(db);
-                }  
-                return hostRepository;
-            }
-        }
+        public GenericRepository<Tag> TagRepository { get { return new GenericRepository<Tag>(db); } set { } }
 
-        public void SaveAsync()
+        public GenericRepository<Magazine> MagazineRepository { get { return new GenericRepository<Magazine>(db); } set { } }
+
+        public GenericRepository<Host> HostRepository { get { return new GenericRepository<Host>(db); } set { } }
+
+        public void Save()
         {
             db.SaveChanges();
         }
@@ -41,11 +36,13 @@ namespace Periodicals.DAL.UnitOfWork
 
         public virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
-                    hostRepository.Dispose();
+                    TagRepository.Dispose();
+                    MagazineRepository.Dispose();
+                    HostRepository.Dispose();
                 }
                 this.disposed = true;
             }

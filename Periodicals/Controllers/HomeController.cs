@@ -13,13 +13,32 @@ namespace Periodicals.Controllers
 {
     public class HomeController : Controller
     {
+        Startup startup = new Startup();
+
         private HostService HostService
         {
             get
             {
-                return HttpContext.GetOwinContext().GetUserManager<HostService>();
+                return startup.CreateHostService();
             }
         }
+
+        private TagService TagService
+        {
+            get
+            {
+                return startup.CreateTagService();
+            }
+        }
+
+        private MagazineService MagazineService
+        {
+            get
+            {
+                return startup.CreateMagazineService();
+            }
+        } 
+
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -27,10 +46,11 @@ namespace Periodicals.Controllers
                 return HttpContext.GetOwinContext().Authentication;
             }
         }
+
         public ActionResult Index(string message = "", string displayCondition = "")
         {
             ViewBag.Message = message;
-            ViewBag.Tags = HostService.GetAllTags()
+            ViewBag.Tags = TagService.GetAll()
                 .Select(tag => tag.TagName)
                 .ToArray();
             List<MagazineDTO> MagazinesDTO;
@@ -38,85 +58,52 @@ namespace Periodicals.Controllers
             {
                 if (displayCondition == "all")
                 {
-                    MagazinesDTO = HostService.GetAllMagazines()
+                    MagazinesDTO = MagazineService.GetAll()
                        .OrderBy(magazine => magazine.MagazineName)
                        .ThenBy(magazine => magazine.Price)
                        .ToList();
                 }
                 else if(displayCondition == "byPrice")
                 {
-                    MagazinesDTO = HostService.GetAllMagazines()
+                    MagazinesDTO = MagazineService.GetAll()
                        .OrderBy(magazine => magazine.Price)
                        .ToList();
                 }
                 else if(displayCondition == "byName")
                 {
-                    MagazinesDTO = HostService.GetAllMagazines()
+                    MagazinesDTO = MagazineService.GetAll()
                        .OrderBy(magazine => magazine.MagazineName)
                        .ToList();
                 }
+                else if(displayCondition.Substring(0, 3) == "tag")
+                {
+                    MagazinesDTO = TagService.GetByTagName(displayCondition.Substring(3)).ToList();
+                }
                 else
                 {
-                    if (HostService.GetMagazine(displayCondition) != null)
+                    if (MagazineService.Get(displayCondition) != null)
                     {
-                        MagazinesDTO = new List<MagazineDTO>() { HostService.GetMagazine(displayCondition) };
+                        MagazinesDTO = new List<MagazineDTO>() { MagazineService.Get(displayCondition) };
                     }
                     else
                     {
-                        MagazinesDTO = HostService.GetAllMagazines().ToList();
+                        MagazinesDTO = MagazineService.GetAll().ToList();
                     }
                 }
             }
             else
             {
-                MagazinesDTO = HostService.GetAllMagazines().ToList();
+                MagazinesDTO = MagazineService.GetAll().ToList();
             }
             return View("Index", MagazinesDTO);
         }
 
-        public ActionResult ShowMore(int? id)
-        {
-            MagazineDTO magazine = HostService.GetMagazine(id);
-            ViewBag.Tags = magazine.Tags;
-            ViewBag.Message = "";
-            return View("ShowMore", magazine);
-        }
-
-        public ActionResult AddUserMagazine(int? Id)
-        {
-            HostDTO hostDTO = HostService.GetHostById(Convert.ToInt32(User.Identity.GetUserId()));
-            string message;
-            if (hostDTO.Role == "User")
-            {
-                MagazineDTO magazine = HostService.GetMagazine(Id);
-                if (hostDTO.Magazines.Contains(magazine))
-                {
-                    message = "You have already suscribed this magazine";
-                }
-                else if (hostDTO.Wallet >= magazine.Price)
-                {
-                    hostDTO.Wallet -= magazine.Price;
-                    HostService.EditUser(hostDTO);
-                    HostService.AddUserMagazine(hostDTO, magazine.Id);
-                    message = "Magazine added to your account";
-                }
-                else
-                {
-                    message = "You don`t have enough money to buy this magazine";
-                }
-            }
-            else
-            {
-                message = "You aren't authorized";
-            }
-            return Index(message);
-        }
-
         public ActionResult ChooseRole()
         {
-            HostDTO hostDTO = HostService.GetHostById(Convert.ToInt32(User.Identity.GetUserId()));
+            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             return RedirectToRoute(new { area = hostDTO.Role, controller = $"{hostDTO.Role}Account", action = $"{hostDTO.Role}Account" });
         }
+
         [HttpPost]
         public ActionResult SortBy()
         {
@@ -135,15 +122,17 @@ namespace Periodicals.Controllers
             }
             return Index("", sortCondition);
         }
+
         [HttpPost]
         public ActionResult FindByName()
         {
             return Index("", Request.Params["Name"]);
         }
+
         [HttpPost]
         public ActionResult FindByTag()
         {
-            return Index("", Request.Params["tags"]);
+            return Index("", "tag"+Request.Params["tags"]);
         }
     }
 }

@@ -359,23 +359,26 @@ footer {
 }
 
     #filterContainer .row {
-        margin-left: 20%;
+        margin-left: 17%;
     }
         #filterContainer .row .filterCheck {
             padding: 0, 5px;
+            margin-left: 10px;
         }
+            #filterContainer .row label{
+                margin-right: 10px;
+            }
 
-
-        #headerName5 {
-            color: white;
-            display: inline-block;
-            font-size: 20px;
-            font-family: OpenSans;
-            background-color: rgba(49, 49, 49, 0.5);
-            width: 1200px;
-            padding: 30px;
-            margin-left: 10%;
-        }
+            #headerName5 {
+                color: white;
+                display: inline-block;
+                font-size: 20px;
+                font-family: OpenSans;
+                background-color: rgba(49, 49, 49, 0.5);
+                width: 1200px;
+                padding: 30px;
+                margin-left: 10%;
+            }
 
 #headerName5 a {
     text-decoration: none;
@@ -458,4 +461,8 @@ footer {
 }
 .filterBlocks input, .filterBlocks select{
     color: black;
+}
+
+.filterBut{
+    margin-left: 10px;
 }

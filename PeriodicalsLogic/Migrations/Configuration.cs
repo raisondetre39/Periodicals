@@ -9,7 +9,7 @@ namespace Periodicals.DAL.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(Periodicals.DAL.DbHelpers.PeriodicalsContext context)

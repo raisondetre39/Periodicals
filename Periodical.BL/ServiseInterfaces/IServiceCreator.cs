@@ -2,8 +2,8 @@
 
 namespace Periodical.BL.ServiseInterfaces
 {
-    public interface IServiceCreator
+    interface IServiceCreator
     {
-        HostService CreateHostService(string connection);
+        IService CreateService(string connection);
     }
 }
