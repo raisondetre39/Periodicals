@@ -13,8 +13,6 @@ namespace Periodical.BL.Services
         ClaimsIdentity Authenticate(HostDTO hostDto);
 
         OperationStatus Edit(HostDTO host);
-        
-        OperationStatus UnlockUser(string email);
 
         HostDTO Get(string email);
 

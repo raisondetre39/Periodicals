@@ -11,14 +11,13 @@ namespace Periodicals.Controllers
 {
     public class AccountController : Controller
     {
-        Startup startup = new Startup();
+        private IHostService _hostService;
 
-        private HostService HostService
+        public AccountController() { }
+
+        public AccountController(HostService hostService)
         {
-            get
-            {
-                return startup.CreateHostService();
-            }
+            _hostService = hostService;
         }
 
         private IAuthenticationManager AuthenticationManager
@@ -47,7 +46,7 @@ namespace Periodicals.Controllers
             if (ModelState.IsValid)
             {
                 HostDTO userDto = userDto = new HostDTO { Email = model.Email, Password = model.Password };
-                ClaimsIdentity claim = HostService.Authenticate(userDto);
+                ClaimsIdentity claim = _hostService.Authenticate(userDto);
                 if (claim == null)
                 {
                     ModelState.AddModelError("", "Uncorrect login or password");
@@ -91,10 +90,10 @@ namespace Periodicals.Controllers
                     Role = Request.Params["role2"]
 
                 };
-                OperationStatus operationDetails = HostService.Create(hostDto, Request.Params["role2"]);
+                OperationStatus operationDetails = _hostService.Create(hostDto, Request.Params["role2"]);
                 if (operationDetails.Succedeed)
                 {
-                    ClaimsIdentity claim = HostService.Authenticate(hostDto);
+                    ClaimsIdentity claim = _hostService.Authenticate(hostDto);
                     if (claim == null)
                     {
                         ModelState.AddModelError("", "Smth went wrong");

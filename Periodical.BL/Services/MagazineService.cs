@@ -13,9 +13,9 @@ namespace Periodical.BL.Services
     {
         UnitOfWork Database { get; set; }
 
-        public MagazineService(UnitOfWork unitOfWork)
+        public MagazineService()
         {
-            Database = unitOfWork;
+            Database = new UnitOfWork("DefaultConnection");
         }
 
         public OperationStatus Create(MagazineDTO magazineDTO, HostDTO author)

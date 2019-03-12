@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Services;
+using Periodical.BL.ServiseInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,31 +13,18 @@ namespace Periodicals.Controllers
 {
     public class HomeController : Controller
     {
-        Startup startup = new Startup();
+        ITagService _tagService;
+        IHostService _hostService;
+        IMagazineService _magazineService;
 
-        private HostService HostService
+        public HomeController(TagService tagService, HostService hostService, MagazineService magazineService )
         {
-            get
-            {
-                return startup.CreateHostService();
-            }
+            _tagService = tagService;
+            _hostService = hostService;
+            _magazineService = magazineService;
         }
 
-        private TagService TagService
-        {
-            get
-            {
-                return startup.CreateTagService();
-            }
-        }
-
-        private MagazineService MagazineService
-        {
-            get
-            {
-                return startup.CreateMagazineService();
-            }
-        } 
+        public HomeController() { }
 
         private IAuthenticationManager AuthenticationManager
         {
@@ -50,7 +37,7 @@ namespace Periodicals.Controllers
         public ActionResult Index(string message = "", string displayCondition = "")
         {
             ViewBag.Message = message;
-            ViewBag.Tags = TagService.GetAll()
+            ViewBag.Tags = _tagService.GetAll()
                 .Select(tag => tag.TagName)
                 .ToArray();
             List<MagazineDTO> MagazinesDTO;
@@ -58,49 +45,49 @@ namespace Periodicals.Controllers
             {
                 if (displayCondition == "all")
                 {
-                    MagazinesDTO = MagazineService.GetAll()
+                    MagazinesDTO = _magazineService.GetAll()
                        .OrderBy(magazine => magazine.MagazineName)
                        .ThenBy(magazine => magazine.Price)
                        .ToList();
                 }
                 else if(displayCondition == "byPrice")
                 {
-                    MagazinesDTO = MagazineService.GetAll()
+                    MagazinesDTO = _magazineService.GetAll()
                        .OrderBy(magazine => magazine.Price)
                        .ToList();
                 }
                 else if(displayCondition == "byName")
                 {
-                    MagazinesDTO = MagazineService.GetAll()
+                    MagazinesDTO = _magazineService.GetAll()
                        .OrderBy(magazine => magazine.MagazineName)
                        .ToList();
                 }
                 else if(displayCondition.Substring(0, 3) == "tag")
                 {
-                    MagazinesDTO = TagService.GetByTagName(displayCondition.Substring(3)).ToList();
+                    MagazinesDTO = _tagService.GetByTagName(displayCondition.Substring(3)).ToList();
                 }
                 else
                 {
-                    if (MagazineService.Get(displayCondition) != null)
+                    if (_magazineService.Get(displayCondition) != null)
                     {
-                        MagazinesDTO = new List<MagazineDTO>() { MagazineService.Get(displayCondition) };
+                        MagazinesDTO = new List<MagazineDTO>() { _magazineService.Get(displayCondition) };
                     }
                     else
                     {
-                        MagazinesDTO = MagazineService.GetAll().ToList();
+                        MagazinesDTO = _magazineService.GetAll().ToList();
                     }
                 }
             }
             else
             {
-                MagazinesDTO = MagazineService.GetAll().ToList();
+                MagazinesDTO = _magazineService.GetAll().ToList();
             }
             return View("Index", MagazinesDTO);
         }
 
         public ActionResult ChooseRole()
         {
-            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
+            HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             return RedirectToRoute(new { area = hostDTO.Role, controller = $"{hostDTO.Role}Account", action = $"{hostDTO.Role}Account" });
         }
 

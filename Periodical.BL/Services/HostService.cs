@@ -12,9 +12,9 @@ namespace Periodical.BL.Services
     {
         UnitOfWork Database { get; set; }
 
-        public HostService(UnitOfWork unitOfWork)
+        public HostService()
         {
-            Database = unitOfWork;
+            Database = new UnitOfWork("DefaultConnection");
         }
 
         public OperationStatus Create(HostDTO hostDto, string role)
@@ -78,21 +78,6 @@ namespace Periodical.BL.Services
         public void Dispose()
         {
             Database.Dispose();
-        }
-
-        public OperationStatus UnlockUser(string email)
-        {
-            Host hostEdited = Database.HostRepository.GetOne(host => host.Email == email);
-            hostEdited.IsBlocked = false;
-            if (hostEdited != null)
-            {
-                Database.HostRepository.Update(hostEdited);
-                return new OperationStatus(true, "Changes were succsesfull", "");
-            }
-            else
-            {
-                return new OperationStatus(false, "Something went wrong", "ProfileChange");
-            }
         }
 
         public HostDTO Get(string email)

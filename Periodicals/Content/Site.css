@@ -109,7 +109,7 @@ header {
         background-color: rgba(49, 49, 49, 0.5);
         padding: 43px;
         margin-left: 35%;
-        margin-top: 3px;
+        margin-top: 4%;
     }
 
 #loginForm {
@@ -253,6 +253,20 @@ footer {
     margin-left: 10%;
     margin-right: 2%;
 }
+
+#userPhotoContainer2{
+    background-image: url(images/profile.jpg);
+    background-position-x:center;
+    height: 200px;
+    width: 200px;
+    border: 1px solid white;
+    display: inline-block;
+    margin-top: 60px;
+    margin-left: 20%;
+    margin-right: 2%;
+}
+
+
 
 #infoContainer {
     display: inline-block;
@@ -465,4 +479,13 @@ footer {
 
 .filterBut{
     margin-left: 10px;
+}
+
+#Password{
+    margin-right: 0;
+    margin-left: 8%;
+}
+
+#Password1{
+    margin-left: 0;
 }

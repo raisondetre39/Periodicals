@@ -1,61 +1,41 @@
 ﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Services;
+using Periodical.BL.ServiseInterfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Periodicals.Areas.Author.Controllers
 {
     public class AuthorAccountController : Controller
     {
-        Startup startup = new Startup();
+        private ITagService _tagService;
+        private IHostService _hostService;
+        private IMagazineService _magazineService;
+        private IHostMagazineService _hostMagazineService;
 
-        private HostService HostService
-        {
-            get
-            {
-                return startup.CreateHostService();
-            }
-        }
+        public AuthorAccountController() { }
 
-        private HostMagazineService HostMagazineService
+        public AuthorAccountController(TagService tagService, HostService hostService,
+            MagazineService magazineService, HostMagazineService hostMagazineService)
         {
-            get
-            {
-                return startup.CreateHostMagazineService();
-            }
-        }
-
-        private TagService TagService
-        {
-            get
-            {
-                return startup.CreateTagService();
-            }
-        }
-
-        private MagazineService MagazineService
-        {
-            get
-            {
-                return startup.CreateMagazineService();
-            }
+            _tagService = tagService;
+            _hostService = hostService;
+            _magazineService = magazineService;
+            _hostMagazineService = hostMagazineService;
         }
 
         public ActionResult AuthorAccount()
         {
-            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
-            ViewBag.Magazines = HostMagazineService.GetUserMagazines(hostDTO.Id);
+            HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
+            ViewBag.Magazines = _hostMagazineService.GetUserMagazines(hostDTO.Id);
             return View("AuthorAccount", hostDTO);
         }
 
         public ActionResult EditAuthor()
         {
-            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
+            HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             return View("EditAuthor", hostDTO);
         }
 
@@ -65,21 +45,21 @@ namespace Periodicals.Areas.Author.Controllers
         {
             hostDTO.Id = Convert.ToInt32(User.Identity.GetUserId());
             hostDTO.Role = "Author";
-            HostService.Edit(hostDTO);
+            _hostService.Edit(hostDTO);
             return AuthorAccount();
         }
 
         public ActionResult DeleteAuthorMagazine(int? Id)
         {
-            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
-            MagazineService.Delete(Id);
+            HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
+            _magazineService.Delete(Id);
             return AuthorAccount();
         }
 
         public ActionResult EditMagazine(int? id)
         {
-            MagazineDTO magazine = MagazineService.GetById(id);
-            ViewBag.Tags = TagService.GetAll();
+            MagazineDTO magazine = _magazineService.GetById(id);
+            ViewBag.Tags = _tagService.GetAll();
             return View("EditMagazine", magazine);
         }
 
@@ -90,18 +70,18 @@ namespace Periodicals.Areas.Author.Controllers
             magazine.Tags.Clear();
             if (selectedTags != null)
             {
-                foreach (var tag in TagService.GetAll().Where(tag => selectedTags.Contains(tag.TagId)))
+                foreach (var tag in _tagService.GetAll().Where(tag => selectedTags.Contains(tag.TagId)))
                 {
                     magazine.Tags.Add(tag);
                 }
             }
-            MagazineService.Edit(magazine);
+            _magazineService.Edit(magazine);
             return AuthorAccount();
         }
 
         public ActionResult CreateMagazine()
         {
-            ViewBag.Tags = TagService.GetAll();
+            ViewBag.Tags = _tagService.GetAll();
             return View("CreateMagazine");
         }
 
@@ -111,12 +91,12 @@ namespace Periodicals.Areas.Author.Controllers
         {
             if (selectedTags != null)
             {
-                foreach (var tag in TagService.GetAll().Where(tag => selectedTags.Contains(tag.TagId)))
+                foreach (var tag in _tagService.GetAll().Where(tag => selectedTags.Contains(tag.TagId)))
                 {
                     magazine.Tags.Add(tag);
                 }
             }
-            MagazineService.Create(magazine, HostService.GetById(Convert.ToInt32(User.Identity.GetUserId())));
+            _magazineService.Create(magazine, _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId())));
             return AuthorAccount();
         }
     }

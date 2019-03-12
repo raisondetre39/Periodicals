@@ -11,9 +11,9 @@ namespace Periodical.BL.Services
     {
         UnitOfWork Database { get; set; }
 
-        public TagService(UnitOfWork unitOfWork)
+        public TagService()
         {
-            Database = unitOfWork;
+            Database = new UnitOfWork("DefaultConnection");
         }
 
         public IEnumerable<Tag> GetAll()

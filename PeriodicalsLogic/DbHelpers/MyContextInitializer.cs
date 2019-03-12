@@ -36,7 +36,9 @@ namespace Periodicals.DAL.DbHelpers
                 Role = "Author",
                 Name = "Amily Hatson",
                 Password = "amily",
-                Email = "amily@gmail.com"
+                Email = "amily@gmail.com",
+                IsBlocked = true
+
             };
 
             Magazine magazine1 = new Magazine()

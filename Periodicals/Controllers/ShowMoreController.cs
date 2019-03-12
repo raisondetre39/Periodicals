@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Services;
+using Periodical.BL.ServiseInterfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -13,38 +11,20 @@ namespace Periodicals.Controllers
 {
     public class ShowMoreController : Controller
     {
-        Startup startup = new Startup();
+        private ITagService _tagService;
+        private IHostService _hostService;
+        private IMagazineService _magazineService;
+        private IHostMagazineService _hostMagazineService;
 
-        private HostService HostService
-        {
-            get
-            {
-                return startup.CreateHostService();
-            }
-        }
+        public ShowMoreController() { }
 
-        private TagService TagService
+        public ShowMoreController(TagService tagService, HostService hostService,
+            MagazineService magazineService, HostMagazineService hostMagazineService)
         {
-            get
-            {
-                return startup.CreateTagService();
-            }
-        }
-
-        private MagazineService MagazineService
-        {
-            get
-            {
-                return startup.CreateMagazineService();
-            }
-        }
-
-        private HostMagazineService HostMagazineService
-        {
-            get
-            {
-                return startup.CreateHostMagazineService();
-            }
+            _tagService = tagService;
+            _hostService = hostService;
+            _magazineService = magazineService;
+            _hostMagazineService = hostMagazineService;
         }
 
         private IAuthenticationManager AuthenticationManager
@@ -57,7 +37,7 @@ namespace Periodicals.Controllers
 
         public ActionResult ShowMore(int? id)
         {
-            MagazineDTO magazine = MagazineService.GetById(id);
+            MagazineDTO magazine = _magazineService.GetById(id);
             ViewBag.Tags = magazine.Tags;
             ViewBag.Message = "";
             return View("ShowMore", magazine);
@@ -65,11 +45,11 @@ namespace Periodicals.Controllers
 
         public ActionResult AddUserMagazine(int? Id)
         {
-            HostDTO hostDTO = HostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
+            HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             string message;
             if (hostDTO.Role == "User")
             {
-                MagazineDTO magazine = MagazineService.GetById(Id);
+                MagazineDTO magazine = _magazineService.GetById(Id);
                 if (hostDTO.Magazines.Contains(magazine))
                 {
                     message = "You have already suscribed this magazine";
@@ -77,8 +57,8 @@ namespace Periodicals.Controllers
                 else if (hostDTO.Wallet >= magazine.Price)
                 {
                     hostDTO.Wallet -= magazine.Price;
-                    HostService.Edit(hostDTO);
-                    HostMagazineService.Create(hostDTO, magazine.Id);
+                    _hostService.Edit(hostDTO);
+                    _hostMagazineService.Create(hostDTO, magazine.Id);
                     message = "Magazine added to your account";
                 }
                 else
