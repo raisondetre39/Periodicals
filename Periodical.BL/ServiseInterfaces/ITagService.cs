@@ -1,11 +1,10 @@
 ﻿using Periodical.BL.DataTemporaryModels;
 using Periodicals.DAL.Publishings;
-using System;
 using System.Collections.Generic;
 
 namespace Periodical.BL.ServiseInterfaces
 {
-    public interface ITagService : IDisposable
+    public interface ITagService
     {
         IEnumerable<Tag> GetAll();
 

@@ -6,12 +6,17 @@ using System.Web.Mvc;
 using Periodical.BL.Services;
 using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Infrastructure;
+using Periodicals.App_Start;
+using System;
+using Microsoft.AspNet.Identity;
 
 namespace Periodicals.Controllers
 {
+    [ExceptionFilterAtribute]
     public class AccountController : Controller
     {
         private IHostService _hostService;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public AccountController() { }
 
@@ -28,12 +33,6 @@ namespace Periodicals.Controllers
             }
         }
 
-        public ActionResult UserAccountPage()
-        {
-
-            return View("UserAccountPage");
-        }
-
         public ActionResult Login()
         {
             return View("Login");
@@ -47,9 +46,11 @@ namespace Periodicals.Controllers
             {
                 HostDTO userDto = userDto = new HostDTO { Email = model.Email, Password = model.Password };
                 ClaimsIdentity claim = _hostService.Authenticate(userDto);
+                log.Debug($"User with email {userDto.Email} is trying to login and get claim");
                 if (claim == null)
                 {
                     ModelState.AddModelError("", "Uncorrect login or password");
+                    log.Warn($"User with email: {model.Email} and password {model.Password} denied with access to resource");
                 }
                 else
                 {
@@ -58,6 +59,7 @@ namespace Periodicals.Controllers
                     {
                         IsPersistent = true
                     }, claim);
+                    log.Info($"User with email: {model.Email} and password {model.Password} provided access to resource");
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -66,6 +68,7 @@ namespace Periodicals.Controllers
 
         public ActionResult Logout()
         {
+            log.Info($"User id: {Convert.ToInt32(User.Identity.GetUserId())} logout from resource");
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
@@ -91,11 +94,14 @@ namespace Periodicals.Controllers
 
                 };
                 OperationStatus operationDetails = _hostService.Create(hostDto, Request.Params["role2"]);
+                log.Debug($"User with email {hostDto.Email} is trying to create account");
                 if (operationDetails.Succedeed)
                 {
+                    log.Debug($"User with email {hostDto.Email} is trying to login get claim");
                     ClaimsIdentity claim = _hostService.Authenticate(hostDto);
                     if (claim == null)
                     {
+                        log.Warn($"User with email: {model.Email} and password {model.Password} denied with access to resource");
                         ModelState.AddModelError("", "Smth went wrong");
                     }
                     else
@@ -105,11 +111,15 @@ namespace Periodicals.Controllers
                         {
                             IsPersistent = true
                         }, claim);
+                        log.Info($"User with email: {model.Email} and password {model.Password} provided access to resource");
                         return RedirectToRoute(new { area = $"{Request.Params["role2"]}", controller = $"{Request.Params["role2"]}Account", action = $"{Request.Params["role2"]}Account" });
                     }
                 }
                 else
+                {
                     ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
+                    log.Warn($"User with email: {model.Email} and password {model.Password} denied to create profile");
+                }
             }
             return RedirectToAction("Index", "Home");
         }

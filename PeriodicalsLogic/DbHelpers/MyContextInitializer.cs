@@ -64,17 +64,49 @@ namespace Periodicals.DAL.DbHelpers
                 MagazineName = "National Geographic",
                 HostId = 4,
                 Description = "National Geographic(formerly the National Geographic Magazine and branded also as NAT GEO) " +
-                "is the official magazine of the National Geographic Society.It has been published continuously since its first issue in 1888," +
+                "is the official magazine of the National Geographic Society.It" +
+                " has been published continuously since its first issue in 1888," +
                 "nine months after the Society itself was founded.It primarily contains articles about science," +
                 "geography, history,and world culture. The magazine is known for its thick square " +
-                "- bound glossy format with a yellow rectangular border and its extensive use of dramatic photographs.Controlling interest in the magazine has been held by 21st Century Fox since 2015.",
+                "- bound glossy format with a yellow rectangular border and" +
+                " its extensive use of dramatic photographs.Controlling interest in " +
+                "the magazine has been held by 21st Century Fox since 2015.",
                 Price = 400,
                 Tags = new List<Tag>() { tag5, tag9 },
                 PublishDate = DateTime.Now
             };
 
-            host1.Magazines.Add(magazine1);
-            host4.Magazines.Add(magazine2);
+            Magazine magazine3 = new Magazine()
+            {
+                MagazineId = 3,
+                MagazineName = "GQ",
+                HostId = 2,
+                Description = "GQ (formerly Gentlemen's Quarterly) is an international " +
+                "monthly men's magazine based in New" +
+                " York City and founded in 1931. The publication focuses on " +
+                "fashion, style, and culture for men, though articles" +
+                " on food, movies, fitness, sex, music, travel, sports, " +
+                "technology, and books are also featured..",
+                Price = 800,
+                Tags = new List<Tag>() { tag5, tag7, tag10 },
+                PublishDate = DateTime.Now
+            };
+
+            Magazine magazine4 = new Magazine()
+            {
+                MagazineId = 4,
+                MagazineName = "Vogue",
+                HostId = 4,
+                Description = "Vogue is a fashion and lifestyle magazine covering many topics " +
+                "including fashion, beauty, culture, living, and runway. Vogue began as a weekly " +
+                "newspaper in 1892 in the United States, before becoming a monthly publication years later. The " +
+                "British Vogue was the first international edition launched in 1916, while the Italian version has " +
+                "been called the top fashion magazine in the world. As of today, there are 23 international editions.",
+                Price = 500,
+                Tags = new List<Tag>() { tag4, tag6, tag9 },
+                PublishDate = DateTime.Now
+            };
+
             Host host2 = new Host()
             {
                 Id = 0,
@@ -87,9 +119,6 @@ namespace Periodicals.DAL.DbHelpers
                 Password = "detre39"
             };
 
-            magazine1.Hosts.Add(host2);
-            host2.Magazines.Add(magazine1);
-
             Host host3 = new Host()
             {
                 Id = 3,
@@ -99,7 +128,12 @@ namespace Periodicals.DAL.DbHelpers
                 Password = "admin"
             };
 
-
+            host1.Magazines.Add(magazine1);
+            host1.Magazines.Add(magazine3);
+            host4.Magazines.Add(magazine2);
+            host4.Magazines.Add(magazine4);
+            magazine1.Hosts.Add(host2);
+            host2.Magazines.Add(magazine1);
             db.Hosts.AddRange(new List<Host>() { host2, host1, host3, host4 });
             db.Tags.AddRange(new List<Tag>() { tag1, tag2, tag3, tag4, tag5, tag6, tag7, tag8, tag9, tag10 });
             db.Magazines.AddRange(new List<Magazine>() { magazine1, magazine2 });

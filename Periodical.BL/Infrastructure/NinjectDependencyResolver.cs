@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Ninject;
 using Periodical.BL.Services;
-using Periodical.BL.ServiseInterfaces;
 
 namespace Periodical.BL.Infrastructure
 {

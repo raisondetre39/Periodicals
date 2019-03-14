@@ -7,16 +7,19 @@ namespace Periodicals.DAL.DbHelpers
 {
     public class PeriodicalsContext : IdentityDbContext
     {
-        public PeriodicalsContext(string conectionString) : base(conectionString)
+        public DbSet<Host> Hosts { get; set; }
+
+        public DbSet<Magazine> Magazines { get; set; }
+
+        public DbSet<Tag> Tags { get; set; }
+
+        public PeriodicalsContext(string conectionString) 
+             : base(conectionString)
         {
             Database.SetInitializer(new MyContextInitializer());
         }
 
         public PeriodicalsContext() { }
-
-        public DbSet<Host> Hosts { get; set; }
-        public DbSet<Magazine> Magazines { get; set; }
-        public DbSet<Tag> Tags { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -39,8 +42,9 @@ namespace Periodicals.DAL.DbHelpers
                     x.MapRightKey("TagId");
                     x.ToTable("TagMagazine");
                 });
-            modelBuilder.Entity<IdentityUserLogin>().HasKey<string>(l => l.UserId);
-            modelBuilder.Entity<IdentityRole>().HasKey<string>(r => r.Id);
+
+            modelBuilder.Entity<IdentityUserLogin>().HasKey(l => l.UserId);
+            modelBuilder.Entity<IdentityRole>().HasKey(r => r.Id);
             modelBuilder.Entity<IdentityUserRole>().HasKey(r => new { r.RoleId, r.UserId });
         }
     }

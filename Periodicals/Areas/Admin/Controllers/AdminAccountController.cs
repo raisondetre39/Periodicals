@@ -2,13 +2,16 @@
 using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Services;
 using Periodical.BL.ServiseInterfaces;
+using Periodicals.App_Start;
 using System;
 using System.Web.Mvc;
 
 namespace Periodicals.Areas.Admin.Controllers
 {
+    [ExceptionFilterAtribute]
     public class AdminAccountController : Controller
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IAdminService _adminService;
         private IHostService _hostService;
 
@@ -23,8 +26,9 @@ namespace Periodicals.Areas.Admin.Controllers
         public ActionResult AdminAccount()
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
-            ViewBag.BlockedUsers = _adminService.BlockedUsers();
-            ViewBag.UnlockedUsers = _adminService.UnlockedUsers();
+            ViewBag.BlockedUsers = _adminService.GetBlockedUsers();
+            ViewBag.UnlockedUsers = _adminService.GetUnlockedUsers();
+            log.Info($"User id: {hostDTO.Id} opened admin page");
             return View("AdminAccount", hostDTO);
         }
 
@@ -41,6 +45,7 @@ namespace Periodicals.Areas.Admin.Controllers
             hostDTO.Id = Convert.ToInt32(User.Identity.GetUserId());
             hostDTO.Role = "Admin";
             _hostService.Edit(hostDTO);
+            log.Info($"User id: {hostDTO.Id} sent request to change profile information");
             return AdminAccount();
         }
 
@@ -48,6 +53,7 @@ namespace Periodicals.Areas.Admin.Controllers
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             _adminService.UnlockUser(Id);
+            log.Info($"User id: {hostDTO.Id} sent request to unlock user ( id: {Id} )");
             return AdminAccount();
         }
 
@@ -55,6 +61,7 @@ namespace Periodicals.Areas.Admin.Controllers
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             _adminService.BlockUser(Id);
+            log.Info($"User id: {hostDTO.Id} sent request to block user ( id: {Id} )");
             return AdminAccount();
         }
     }

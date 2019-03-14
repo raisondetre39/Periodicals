@@ -10,6 +10,7 @@ namespace Periodical.BL.Services
 {
     public class HostService : IHostService
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         UnitOfWork Database { get; set; }
 
         public HostService()
@@ -20,15 +21,18 @@ namespace Periodical.BL.Services
         public OperationStatus Create(HostDTO hostDto, string role)
         {
             Host host = Database.HostRepository.GetOne(user => user.Email == hostDto.Email);
+            log.Debug($"User is trying to create {role} profile");
             if (host == null)
             {
                 host = new Host { Email = hostDto.Email, Name = hostDto.Email, Role = role, Password = hostDto.Password };
                 Database.HostRepository.Create(host);
                 Database.Save();
+                log.Info($"User with email: {host.Email} created profile succsesfuly");
                 return new OperationStatus(true, "Registration was sucssesful", "");
             }
             else
             {
+                log.Info($"User with email: {host.Email} denied to create profile");
                 return new OperationStatus(false, "User with this name alredy exsits", "Email");
             }
         }
@@ -37,6 +41,7 @@ namespace Periodical.BL.Services
         {
             ClaimsIdentity claim = null;
             Host host = Database.HostRepository.GetOne(user => user.Email == hostDto.Email && user.Password == hostDto.Password);
+            log.Debug($"User with email: {hostDto.Email} is trying to authenticate to resource");
             if (host != null && !host.IsBlocked)
             {
                 claim = new ClaimsIdentity("ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
@@ -46,6 +51,7 @@ namespace Periodical.BL.Services
                     "OWIN Provider", ClaimValueTypes.String));
                 host.TryingsToEnter = 0;
                 Database.HostRepository.Update(host);
+                log.Info($"User with id: {host.Id} got claims succsesfuly");
             }
             else
             {
@@ -55,50 +61,58 @@ namespace Periodical.BL.Services
                 {
                     host.IsBlocked = true;
                     Database.HostRepository.Update(host);
+                    log.Info($"User with id: {host.Id} is blocked");
                 }
                 Database.HostRepository.Update(host);
+                log.Info($"User with id: {host.Id} denied to get claims");
             }
             return claim;
         }
 
         public OperationStatus Edit(HostDTO host)
         {
+            log.Debug($"Host with id: {host.Id} is trying to edit profile");
             if (host != null)
             {
                 Database.HostRepository.Update(HostDTO.ToHost(host));
                 Database.Save();
+                log.Info($"Host with id: {host.Id} update profile succsesfull");
                 return new OperationStatus(true, "Changes were succsesfull", "");
             }
             else
             {
+                log.Warn($"Host with id: {host.Id} denied to update profile");
                 return new OperationStatus(false, "Something went wrong", "ProfileChange");
             }
         }
 
-        public void Dispose()
-        {
-            Database.Dispose();
-        }
-
         public HostDTO Get(string email)
         {
+            log.Info($"Sent request to data base to get host with email: {email}");
             return HostDTO.ToHostDTO(Database.HostRepository.GetOne(host => host.Email == email));
         }
 
         public IEnumerable<HostDTO> GetAll()
         {
+            log.Info($"Sent request to data base to get all hosts");
             return Database.HostRepository.GetAll()
                 .Select(host => HostDTO.ToHostDTO(host));
         }
 
         public HostDTO GetById(int? id)
         {
+            log.Info($"Sent request to data base to get host with id: {id}");
             HostDTO hostDTO =  HostDTO.ToHostDTO(Database.HostRepository.GetById(id));
             hostDTO.Magazines = Database.MagazineRepository
                 .Get(magazine => magazine.Hosts.Contains(Database.HostRepository.GetById(id)))
                 .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
                 .ToList();
             return hostDTO;
+        }
+
+        public void Dispose()
+        {
+            Database.Dispose();
         }
     }
 }

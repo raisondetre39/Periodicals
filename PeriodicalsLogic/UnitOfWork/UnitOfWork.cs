@@ -44,7 +44,7 @@ namespace Periodicals.DAL.UnitOfWork
                     MagazineRepository.Dispose();
                     HostRepository.Dispose();
                 }
-                this.disposed = true;
+                disposed = true;
             }
         }
     }

@@ -2,14 +2,17 @@
 using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Services;
 using Periodical.BL.ServiseInterfaces;
+using Periodicals.App_Start;
 using System;
 using System.Linq;
 using System.Web.Mvc;
 
 namespace Periodicals.Areas.Author.Controllers
 {
+    [ExceptionFilterAtribute]
     public class AuthorAccountController : Controller
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private ITagService _tagService;
         private IHostService _hostService;
         private IMagazineService _magazineService;
@@ -30,6 +33,7 @@ namespace Periodicals.Areas.Author.Controllers
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             ViewBag.Magazines = _hostMagazineService.GetUserMagazines(hostDTO.Id);
+            log.Info($"User id: {hostDTO.Id} opened author page");
             return View("AuthorAccount", hostDTO);
         }
 
@@ -46,6 +50,7 @@ namespace Periodicals.Areas.Author.Controllers
             hostDTO.Id = Convert.ToInt32(User.Identity.GetUserId());
             hostDTO.Role = "Author";
             _hostService.Edit(hostDTO);
+            log.Info($"User id: {hostDTO.Id} sent request to change profile information");
             return AuthorAccount();
         }
 
@@ -53,6 +58,7 @@ namespace Periodicals.Areas.Author.Controllers
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             _magazineService.Delete(Id);
+            log.Info($"User id: {hostDTO.Id} sent request to delete magazine");
             return AuthorAccount();
         }
 
@@ -76,6 +82,8 @@ namespace Periodicals.Areas.Author.Controllers
                 }
             }
             _magazineService.Edit(magazine);
+            log.Info($"User id: {_hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()))} " +
+                $" sent request to change magazine ( id: {magazine.Id} )");
             return AuthorAccount();
         }
 
@@ -97,6 +105,8 @@ namespace Periodicals.Areas.Author.Controllers
                 }
             }
             _magazineService.Create(magazine, _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId())));
+            log.Info($"User id: {_hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()))}" +
+                   $" sent reques to create new magazine");
             return AuthorAccount();
         }
     }

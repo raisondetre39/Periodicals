@@ -1,12 +1,11 @@
 ﻿using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Infrastructure;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace Periodical.BL.Services
 {
-    public interface IHostService : IDisposable 
+    public interface IHostService
     {
         OperationStatus Create(HostDTO hostDto, string role);
 

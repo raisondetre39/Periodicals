@@ -3,18 +3,21 @@ using Microsoft.Owin.Security;
 using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Services;
 using Periodical.BL.ServiseInterfaces;
+using Periodicals.App_Start;
 using System;
 using System.Web;
 using System.Web.Mvc;
 
 namespace Periodicals.Controllers
 {
+    [ExceptionFilterAtribute]
     public class ShowMoreController : Controller
     {
         private ITagService _tagService;
         private IHostService _hostService;
         private IMagazineService _magazineService;
         private IHostMagazineService _hostMagazineService;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public ShowMoreController() { }
 
@@ -40,6 +43,7 @@ namespace Periodicals.Controllers
             MagazineDTO magazine = _magazineService.GetById(id);
             ViewBag.Tags = magazine.Tags;
             ViewBag.Message = "";
+            log.Info($"Display all information about magazine ( id: {id} )");
             return View("ShowMore", magazine);
         }
 
@@ -47,12 +51,15 @@ namespace Periodicals.Controllers
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
             string message;
+            log.Debug("User is trying to add magazine to user list");
             if (hostDTO.Role == "User")
             {
                 MagazineDTO magazine = _magazineService.GetById(Id);
+                log.Debug("Check if user has enought money to suscribe new magazine");
                 if (hostDTO.Magazines.Contains(magazine))
                 {
                     message = "You have already suscribed this magazine";
+                    log.Info($"User id: {Convert.ToInt32(User.Identity.GetUserId())} already has this magazine");
                 }
                 else if (hostDTO.Wallet >= magazine.Price)
                 {
@@ -68,9 +75,10 @@ namespace Periodicals.Controllers
             }
             else
             {
+                log.Info("User is not authorised to get magasine");
                 message = "You aren't authorized";
             }
-            return RedirectToAction("Index", "Home", new { message = message });
+            return RedirectToAction("Index", "Home", new { message });
         }
     }
 }

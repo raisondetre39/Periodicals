@@ -3,6 +3,7 @@ using Microsoft.Owin.Security;
 using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Services;
 using Periodical.BL.ServiseInterfaces;
+using Periodicals.App_Start;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,13 @@ using System.Web.Mvc;
 
 namespace Periodicals.Controllers
 {
+    [ExceptionFilterAtribute]
     public class HomeController : Controller
     {
         ITagService _tagService;
         IHostService _hostService;
         IMagazineService _magazineService;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public HomeController(TagService tagService, HostService hostService, MagazineService magazineService )
         {
@@ -41,33 +44,40 @@ namespace Periodicals.Controllers
                 .Select(tag => tag.TagName)
                 .ToArray();
             List<MagazineDTO> MagazinesDTO;
+            log.Debug($"Display magazines by paticular condition: {displayCondition} if it excists");
             if (!String.IsNullOrEmpty(displayCondition))
             {
+                log.Debug($"Chose annaproperiate condition");
                 if (displayCondition == "all")
                 {
                     MagazinesDTO = _magazineService.GetAll()
                        .OrderBy(magazine => magazine.MagazineName)
                        .ThenBy(magazine => magazine.Price)
                        .ToList();
+                    log.Info("Display magazines odered by magazine name and it`s price");
                 }
                 else if(displayCondition == "byPrice")
                 {
                     MagazinesDTO = _magazineService.GetAll()
                        .OrderBy(magazine => magazine.Price)
                        .ToList();
+                    log.Info("Display magazines odered by magazine price");
                 }
                 else if(displayCondition == "byName")
                 {
                     MagazinesDTO = _magazineService.GetAll()
                        .OrderBy(magazine => magazine.MagazineName)
                        .ToList();
+                    log.Info("Display magazines odered by magazine name");
                 }
                 else if(displayCondition.Substring(0, 3) == "tag")
                 {
                     MagazinesDTO = _tagService.GetByTagName(displayCondition.Substring(3)).ToList();
+                    log.Info($"Display magazines contains tag: {displayCondition.Substring(3)}");
                 }
                 else
                 {
+                    log.Debug("Checking if display condition annaproperiate to another filter");
                     if (_magazineService.Get(displayCondition) != null)
                     {
                         MagazinesDTO = new List<MagazineDTO>() { _magazineService.Get(displayCondition) };
@@ -80,6 +90,7 @@ namespace Periodicals.Controllers
             }
             else
             {
+                log.Info("Display all magazines");
                 MagazinesDTO = _magazineService.GetAll().ToList();
             }
             return View("Index", MagazinesDTO);
@@ -95,6 +106,7 @@ namespace Periodicals.Controllers
         public ActionResult SortBy()
         {
             string sortCondition;
+            log.Debug("Chose magazine filter name");
             if (Request.Params["orderByPrice"] == "byPrice" && Request.Params["orderByName"] == "byName")
             {
                 sortCondition = "all";

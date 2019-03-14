@@ -1,18 +1,8 @@
-﻿
+﻿.dl-horizontal dt { white-space: normal;}
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-.dl-horizontal dt {
-    white-space: normal;
-}
-
-/* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
-textarea {
-    max-width: 280px;
-}
+textarea {max-width: 280px;}
 
 nav {
     background-color: rgba(49, 49, 49, 0.7);
@@ -54,21 +44,17 @@ header {
     padding-top: 0;
 }
 
-
-
-    header a:hover, #userAccountPage a:hover {
-        text-decoration: none;
-        color: #b7bdc3;
-    }
-
-    header a:active, #userAccountPage a:active {
-        text-decoration: none;
-        color: #b7bdc3;
-    }
-
-.menySeparator {
-    font-weight: bolder;
+header a:hover, #userAccountPage a:hover {
+    text-decoration: none;
+    color: #b7bdc3;
 }
+
+header a:active, #userAccountPage a:active {
+    text-decoration: none;
+    color: #b7bdc3;
+}
+
+.menySeparator { font-weight: bolder;}
 
 #logo {
     padding-right: 30px;
@@ -88,10 +74,10 @@ header {
     margin-top: 10%;
 }
 
-    #headerName a {
-        text-decoration: none;
-        color: white;
-    }
+#headerName a {
+    text-decoration: none;
+    color: white;
+}
 
 #headerContainer {
     border: 1px solid white;
@@ -99,53 +85,43 @@ header {
     padding: 10px, 20px;
 }
 
-    #headerName2 {
-        color: white;
-        display: inline-block;
-        vertical-align: middle;
-        text-align: center;
-        font-size: 20px;
-        font-family: OpenSans;
-        background-color: rgba(49, 49, 49, 0.5);
-        padding: 43px;
-        margin-left: 35%;
-        margin-top: 4%;
-    }
-
-#loginForm {
-    margin-left: 7%;
+#headerName2 {
+    color: white;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 20px;
+    font-family: OpenSans;
+    background-color: rgba(49, 49, 49, 0.5);
+    padding: 43px;
+    margin-left: 35%;
+    margin-top: 4%;
 }
 
-#socialLoginForm {
-    margin-left: 25%;
+#loginForm { margin-left: 7%;}
+
+#socialLoginForm {margin-left: 25%;}
+
+#socialLoginForm a, #loginForm a {
+    text-decoration: none;
+    color: white;
 }
 
-    #socialLoginForm a, #loginForm a {
-        text-decoration: none;
-        color: white;
-    }
-
-        #loginForm a:hover {
-            text-decoration: none;
-            color: #b7bdc3;
-        }
-
-#subBut, #rememberMe, #ofToReg {
-    float: left;
+#loginForm a:hover {
+     text-decoration: none;
+     color: #b7bdc3;
 }
+
+#subBut, #rememberMe, #ofToReg { float: left;}
 
 #rememberMe {
     margin-left: 25%;
     font-weight: bolder;
 }
 
-    #rememberMe label {
-        font-weight: bolder;
-    }
+#rememberMe label {font-weight: bolder;}
 
-#subBut {
-    margin-left: 19%;
-}
+#subBut {margin-left: 19%;}
 
 #subBut, #subBut2 {
     color: #fff;
@@ -156,10 +132,10 @@ header {
     padding: 5px 8px;
 }
 
-    #subBut:hover, #subBut2:hover {
-        background: #d1d1d1;
-        opacity: 0.9;
-    }
+#subBut:hover, #subBut2:hover {
+    background: #d1d1d1;
+    opacity: 0.9;
+}
 
 #headerName3 {
     color: white;
@@ -173,18 +149,14 @@ header {
     margin-left: 32%;
 }
 
-#headerName3 .checkRole{
-    margin-left: 5px;
+#headerName3 .checkRole{margin-left: 5px;}
+
+#headerName3 .checkRole #role2, #headerName3 .checkRole span {
+    float: left;
+    margin-right: 10px;
 }
 
-    #headerName3 .checkRole #role2, #headerName3 .checkRole span {
-        float: left;
-        margin-right: 10px;
-    }
-
-    #subBut2 {
-        background: rgba(161, 161, 161, 0.9);
-    }
+#subBut2 {background: rgba(161, 161, 161, 0.9);}
 
 footer {
     background-color: rgba(49, 49, 49, 1);
@@ -193,9 +165,7 @@ footer {
     font-size: 18px;
 }
 
-.footerEl2 a:hover {
-    opacity: 0.7;
-}
+.footerEl2 a:hover { opacity: 0.7;}
 
 .footerEl2 {
     display: inline-block;
@@ -203,27 +173,22 @@ footer {
     margin-top: -35px;
 }
 
-    .footerEl2 img {
-        width: 24px;
-        height: 24px;
-        margin-left: 5px;
-    }
-
-    .footerEl2 a {
-        display: inline-block;
-        padding: 0;
-        margin-left: 4px;
-        height: 24px;
-    }
-
-.checkRole b, .checkRole #role{
-    float: left;
+.footerEl2 img {
+    width: 24px;
+    height: 24px;
+    margin-left: 5px;
 }
 
-.parName{
-    text-align: center;
+.footerEl2 a {
+    display: inline-block;
+    padding: 0;
+    margin-left: 4px;
+    height: 24px;
 }
 
+.checkRole b, .checkRole #role { float: left;}
+
+.parName{ text-align: center;}
 
 
 #userAccountPage, #allBooks {
@@ -236,11 +201,11 @@ footer {
 }
 
 
-    #userAccountBackground, #allBooks {
-        background-color: rgba(49, 49, 49, 0.7);
-        color: white;
-        padding: 30px;
-    }
+#userAccountBackground, #allBooks {
+    background-color: rgba(49, 49, 49, 0.7);
+    color: white;
+    padding: 30px;
+}
 
 #userPhotoContainer{
     background-image: url(images/profile.jpg);
@@ -266,8 +231,6 @@ footer {
     margin-right: 2%;
 }
 
-
-
 #infoContainer {
     display: inline-block;
     vertical-align: top;
@@ -285,11 +248,11 @@ footer {
     margin-left: 5px;
 }
 
-    .userBtn a {
-        color: #fff;
-        text-decoration: none;
-        user-select: none;
-    }
+.userBtn a {
+    color: #fff;
+    text-decoration: none;
+    user-select: none;
+}
 
 #headerName4 {
     color: white;
@@ -313,9 +276,7 @@ footer {
     width: 90%;
     color: black;
 }
-.textBox img {
-    padding-top: 30px;
-}
+.textBox img { padding-top: 30px;}
 
 #headerName4 .container{
     width: 500px;
@@ -350,10 +311,8 @@ footer {
     background-color: rgba(49, 49, 49, 0.7);
     padding-top: 50px;
 }
-#allBooks{
-    padding: 0;
-}
 
+#allBooks { padding: 0;}
 
 #allBooks {
     background-image: url(images/marble_texture4479.jpg);
@@ -372,27 +331,27 @@ footer {
     padding-top: 10px;
 }
 
-    #filterContainer .row {
-        margin-left: 17%;
-    }
-        #filterContainer .row .filterCheck {
-            padding: 0, 5px;
-            margin-left: 10px;
-        }
-            #filterContainer .row label{
-                margin-right: 10px;
-            }
+#filterContainer .row { margin-left: 17%; }
 
-            #headerName5 {
-                color: white;
-                display: inline-block;
-                font-size: 20px;
-                font-family: OpenSans;
-                background-color: rgba(49, 49, 49, 0.5);
-                width: 1200px;
-                padding: 30px;
-                margin-left: 10%;
-            }
+#filterContainer .row .filterCheck {
+    padding: 0, 5px;
+    margin-left: 10px;
+}
+
+#filterContainer .row label{
+    margin-right: 10px;
+}
+
+#headerName5 {
+    color: white;
+    display: inline-block;
+    font-size: 20px;
+    font-family: OpenSans;
+    background-color: rgba(49, 49, 49, 0.5);
+    width: 1200px;
+    padding: 30px;
+    margin-left: 10%;
+}
 
 #headerName5 a {
     text-decoration: none;
@@ -430,10 +389,10 @@ footer {
     margin-left: 30%;
 }
 
-    #headerName6 h2 {
-        vertical-align: middle;
-        text-align: center;
-    }
+#headerName6 h2 {
+    vertical-align: middle;
+    text-align: center;
+}
 
 #magazineEditor input {
     color: black;
@@ -448,15 +407,16 @@ footer {
     height: 120px;
 }
 
-    #headerName6 .container {
-        width: 600px;
-        margin-left: 5px;
-    }
+#headerName6 .container {
+    width: 600px;
+    margin-left: 5px;
+}
     
-    .tags{
-        width: 13px;
-        display: inline-block;
-    }
+.tags{
+    width: 13px;
+    display: inline-block;
+}
+
 #magDescription {
     margin-left: 20%;
     width: 100%;
@@ -465,27 +425,19 @@ footer {
     margin-right: 0;
 }
 
-#magDescriptionLabael{
-    margin-right: 7.5%;
-}
+#magDescriptionLabael{ margin-right: 7.5%;}
 
 .filterBlocks{
     display: inline-block;
     margin: 0 2%;
 }
-.filterBlocks input, .filterBlocks select{
-    color: black;
-}
+.filterBlocks input, .filterBlocks select{ color: black;}
 
-.filterBut{
-    margin-left: 10px;
-}
+.filterBut{ margin-left: 10px;}
 
 #Password{
     margin-right: 0;
     margin-left: 8%;
 }
 
-#Password1{
-    margin-left: 0;
-}
+#Password1{ margin-left: 0;}
