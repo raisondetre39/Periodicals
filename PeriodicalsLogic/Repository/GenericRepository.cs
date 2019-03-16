@@ -11,7 +11,8 @@ namespace Periodicals.DAL.Repository
     {
         private readonly PeriodicalsContext _dbContext;
         private DbSet<TEntity> _dbSet;
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly log4net.ILog log = log4net.LogManager.GetLogger
+            (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public GenericRepository(PeriodicalsContext context)
         {
@@ -19,51 +20,26 @@ namespace Periodicals.DAL.Repository
             _dbSet = context.Set<TEntity>();
         }
 
-        public void Create(TEntity entity)
+        public GenericRepository() { }
+
+        public virtual void Create(TEntity entity)
         {
-            try
-            {
-                log.Info($"Request to create new {typeof(TEntity)} in databse");
-                _dbSet.Add(entity);
-                _dbContext.SaveChanges();
-            }
-            catch(Exception ex)
-            {
-                log.Warn(ex);
-            }
+            _dbSet.Add(entity);
+            _dbContext.SaveChanges();
         }
 
-        public void Delete(int? id)
+        public virtual void Delete(int? id)
         {
-            try
-            {
-                log.Info("Request to delete entity from databse");
-                _dbSet.Remove(_dbSet.Find(id));
-                _dbContext.SaveChanges();
-            }
-            catch(Exception ex)
-            {
-                log.Warn(ex);
-            }
-
+            _dbSet.Remove(_dbSet.Find(id));
+            _dbContext.SaveChanges();
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public virtual IEnumerable<TEntity> GetAll()
         {
-            try
-            {
-                log.Info($"Request to get all entities from {typeof(TEntity)} table ");
-                return _dbSet.AsNoTracking().ToList();
-            }
-            catch(Exception ex)
-            {
-                log.Warn(ex);
-                return null;
-            }
-            
+            return _dbSet.ToList();
         }
 
-        public TEntity GetById(int? id)
+        public virtual TEntity GetById(int? id)
         {
             try
             {
@@ -74,11 +50,10 @@ namespace Periodicals.DAL.Repository
             {
                 log.Warn(ex);
                 return null;
-            }
-            
+            }  
         }
 
-        public IEnumerable<TEntity> Get(Func<TEntity, bool> predicate)
+        public virtual IEnumerable<TEntity> Get(Func<TEntity, bool> predicate)
         {
             try
             {
@@ -92,7 +67,7 @@ namespace Periodicals.DAL.Repository
             }
         }
 
-        public TEntity GetOne(Func<TEntity, bool> predicate)
+        public virtual TEntity GetOne(Func<TEntity, bool> predicate)
         {
             try
             {
@@ -106,18 +81,10 @@ namespace Periodicals.DAL.Repository
             }
         }
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
-            try
-            {
-                log.Info($"Request to updatae {typeof(TEntity)} in databse");
-                _dbContext.Entry(entity).State = EntityState.Modified;
-                _dbContext.SaveChanges();
-            }
-            catch(Exception ex)
-            {
-                log.Warn(ex);
-            }
+            _dbContext.Entry(entity).State = EntityState.Modified;
+            _dbContext.SaveChanges();
         }
 
         public void Dispose()

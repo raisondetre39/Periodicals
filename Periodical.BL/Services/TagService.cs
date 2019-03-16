@@ -9,12 +9,14 @@ namespace Periodical.BL.Services
 {
     public class TagService : ITagService
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        UnitOfWork Database { get; set; }
+        private readonly log4net.ILog log = log4net.LogManager.GetLogger
+            (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public TagService()
+        IUnitOfWork Database { get; set; }
+
+        public TagService(IUnitOfWork unitOfWork)
         {
-            Database = new UnitOfWork("DefaultConnection");
+            Database = unitOfWork;
         }
 
         public IEnumerable<Tag> GetAll()
@@ -35,18 +37,13 @@ namespace Periodical.BL.Services
             return Database.TagRepository.GetById(id);
         }
 
-        public List<MagazineDTO> GetByTagName(string name)
+        public IEnumerable<MagazineDTO> GetByTagName(string name)
         {
             log.Info($"Sent request to data base to get magazine contains tag with name: {name}");
             return Database.TagRepository.GetOne(tag => tag.TagName == name)
                 .Magazines
                 .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
                 .ToList();
-        }
-
-        public void Dispose()
-        {
-            Database.Dispose();
         }
     }
 }

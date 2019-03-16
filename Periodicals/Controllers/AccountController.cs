@@ -13,24 +13,15 @@ using Microsoft.AspNet.Identity;
 namespace Periodicals.Controllers
 {
     [ExceptionFilterAtribute]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private IHostService _hostService;
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public AccountController() { }
 
-        public AccountController(HostService hostService)
+        public AccountController(IHostService hostService)
         {
             _hostService = hostService;
-        }
-
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
         }
 
         public ActionResult Login()

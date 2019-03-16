@@ -11,12 +11,14 @@ namespace Periodical.BL.Services
 {
     public class MagazineService : IMagazineService
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        UnitOfWork Database { get; set; }
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
+            (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public MagazineService()
+        IUnitOfWork Database { get; set; }
+
+        public MagazineService(IUnitOfWork unitOfWork)
         {
-            Database = new UnitOfWork("DefaultConnection");
+            Database = unitOfWork;
         }
 
         public OperationStatus Create(MagazineDTO magazineDTO, HostDTO author)
@@ -95,11 +97,6 @@ namespace Periodical.BL.Services
             log.Info($"Sent request to data base to delete magazine with id: {id}");
             Database.MagazineRepository.Delete(id);
             return new OperationStatus(true, "Delete was succsesfull", "");
-        }
-
-        public void Dispose()
-        {
-            Database.Dispose();
         }
     }
 }

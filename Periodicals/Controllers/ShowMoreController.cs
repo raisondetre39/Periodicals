@@ -11,31 +11,22 @@ using System.Web.Mvc;
 namespace Periodicals.Controllers
 {
     [ExceptionFilterAtribute]
-    public class ShowMoreController : Controller
+    public class ShowMoreController : BaseController
     {
         private ITagService _tagService;
         private IHostService _hostService;
         private IMagazineService _magazineService;
         private IHostMagazineService _hostMagazineService;
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public ShowMoreController() { }
 
-        public ShowMoreController(TagService tagService, HostService hostService,
-            MagazineService magazineService, HostMagazineService hostMagazineService)
+        public ShowMoreController(ITagService tagService, IHostService hostService,
+            IMagazineService magazineService, IHostMagazineService hostMagazineService)
         {
             _tagService = tagService;
             _hostService = hostService;
             _magazineService = magazineService;
             _hostMagazineService = hostMagazineService;
-        }
-
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
         }
 
         public ActionResult ShowMore(int? id)

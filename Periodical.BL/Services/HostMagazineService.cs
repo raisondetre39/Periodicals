@@ -11,12 +11,14 @@ namespace Periodical.BL.Services
 {
     public class HostMagazineService : IHostMagazineService
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        UnitOfWork Database { get; set; }
+        private readonly log4net.ILog log = log4net.LogManager.GetLogger
+            (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public HostMagazineService()
+        IUnitOfWork Database { get; set; }
+
+        public HostMagazineService(IUnitOfWork unitOfWork)
         {
-            Database = new UnitOfWork("DefaultConnection");
+            Database = unitOfWork;
         }
 
         public OperationStatus Create(HostDTO userDTO, int magasineId)
@@ -58,18 +60,13 @@ namespace Periodical.BL.Services
             }
         }
 
-        public List<MagazineDTO> GetUserMagazines(int id)
+        public IEnumerable<MagazineDTO> GetUserMagazines(int id)
         {
             log.Info($"Get all user`s ( id: {id} ) magazines");
             return Database.HostRepository.GetById(id)
                 .Magazines
                 .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
                 .ToList();
-        }
-
-        public void Dispose()
-        {
-            Database.Dispose();
         }
     }
 }

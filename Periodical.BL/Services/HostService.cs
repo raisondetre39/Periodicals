@@ -10,12 +10,14 @@ namespace Periodical.BL.Services
 {
     public class HostService : IHostService
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        UnitOfWork Database { get; set; }
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
+            (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public HostService()
+        IUnitOfWork Database { get; set; }
+
+        public HostService(IUnitOfWork unitOfWork)
         {
-            Database = new UnitOfWork("DefaultConnection");
+            Database = unitOfWork;
         }
 
         public OperationStatus Create(HostDTO hostDto, string role)
@@ -92,11 +94,12 @@ namespace Periodical.BL.Services
             return HostDTO.ToHostDTO(Database.HostRepository.GetOne(host => host.Email == email));
         }
 
-        public IEnumerable<HostDTO> GetAll()
+        public List<HostDTO> GetAll()
         {
             log.Info($"Sent request to data base to get all hosts");
             return Database.HostRepository.GetAll()
-                .Select(host => HostDTO.ToHostDTO(host));
+                .Select(host => HostDTO.ToHostDTO(host))
+                .ToList();
         }
 
         public HostDTO GetById(int? id)
@@ -108,11 +111,6 @@ namespace Periodical.BL.Services
                 .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
                 .ToList();
             return hostDTO;
-        }
-
-        public void Dispose()
-        {
-            Database.Dispose();
         }
     }
 }

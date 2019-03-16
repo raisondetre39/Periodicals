@@ -3,21 +3,21 @@ using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Services;
 using Periodical.BL.ServiseInterfaces;
 using Periodicals.App_Start;
+using Periodicals.Controllers;
 using System;
 using System.Web.Mvc;
 
 namespace Periodicals.Areas.Admin.Controllers
 {
     [ExceptionFilterAtribute]
-    public class AdminAccountController : Controller
+    public class AdminAccountController : BaseController
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IAdminService _adminService;
         private IHostService _hostService;
 
         public AdminAccountController() { }
 
-        public AdminAccountController(AdminService adminService, HostService hostService)
+        public AdminAccountController(IAdminService adminService, IHostService hostService)
         {
             _adminService = adminService;
             _hostService = hostService;

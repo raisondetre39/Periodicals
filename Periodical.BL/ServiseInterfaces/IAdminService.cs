@@ -13,7 +13,5 @@ namespace Periodical.BL.ServiseInterfaces
         List<HostDTO> GetBlockedUsers();
 
         List<HostDTO> GetUnlockedUsers();
-
-        void Dispose();
     }
 }

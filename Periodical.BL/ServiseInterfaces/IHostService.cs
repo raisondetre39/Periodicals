@@ -15,10 +15,8 @@ namespace Periodical.BL.Services
 
         HostDTO Get(string email);
 
-        IEnumerable<HostDTO> GetAll();
+        List<HostDTO> GetAll();
 
         HostDTO GetById(int? id);
-
-        void Dispose();
     }
 }

@@ -3,6 +3,7 @@ using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Services;
 using Periodical.BL.ServiseInterfaces;
 using Periodicals.App_Start;
+using Periodicals.Controllers;
 using System;
 using System.Linq;
 using System.Web.Mvc;
@@ -10,9 +11,8 @@ using System.Web.Mvc;
 namespace Periodicals.Areas.Author.Controllers
 {
     [ExceptionFilterAtribute]
-    public class AuthorAccountController : Controller
+    public class AuthorAccountController : BaseController
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private ITagService _tagService;
         private IHostService _hostService;
         private IMagazineService _magazineService;

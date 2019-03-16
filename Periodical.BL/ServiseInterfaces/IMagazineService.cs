@@ -19,7 +19,5 @@ namespace Periodical.BL.ServiseInterfaces
         IEnumerable<MagazineDTO> GetBy(string name);
 
         OperationStatus Delete(int? id);
-
-        void Dispose();
     }
 }

@@ -10,21 +10,23 @@ namespace Periodical.BL.Services
 {
     public class AdminService : IAdminService
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        UnitOfWork Database { get; set; }
+        private readonly log4net.ILog log = log4net.LogManager
+            .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public AdminService()
+        IUnitOfWork Database;
+
+        public AdminService(IUnitOfWork unitOfWork)
         {
-            Database = new UnitOfWork("DefaultConnection");
+            Database = unitOfWork;
         }
 
         public OperationStatus UnlockUser(int? id)
         {
             Host hostEdited = Database.HostRepository.GetById(id);
-            hostEdited.IsBlocked = false;
             log.Debug($"Check if user with id: {id} became unlocked");
             if (hostEdited != null)
             {
+                hostEdited.IsBlocked = false;
                 Database.HostRepository.Update(hostEdited);
                 log.Info($"User with id: {id} succsesfully unlocked");
                 return new OperationStatus(true, "Changes were succsesfull", "");
@@ -39,10 +41,10 @@ namespace Periodical.BL.Services
         public OperationStatus BlockUser(int? id)
         {
             Host hostEdited = Database.HostRepository.GetById(id);
-            hostEdited.IsBlocked = true;
             log.Debug($"Check if user with id: {id} became blocked");
             if (hostEdited != null)
             {
+                hostEdited.IsBlocked = true;
                 Database.HostRepository.Update(hostEdited);
                 log.Info($"User with id: {id} succsesfully blocked");
                 return new OperationStatus(true, "Changes were succsesfull", "");
@@ -68,11 +70,6 @@ namespace Periodical.BL.Services
             return Database.HostRepository.Get(host => !host.IsBlocked && host.Email != "admin@gmail.com")
                 .Select(host => HostDTO.ToHostDTO(host))
                 .ToList();
-        }
-
-        public void Dispose()
-        {
-            Database.Dispose();
         }
     }
 }

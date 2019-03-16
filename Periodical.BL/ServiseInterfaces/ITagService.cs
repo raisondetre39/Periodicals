@@ -12,8 +12,6 @@ namespace Periodical.BL.ServiseInterfaces
 
         Tag GetById(int? id);
 
-        List<MagazineDTO> GetByTagName(string name);
-
-        void Dispose();
+        IEnumerable<MagazineDTO> GetByTagName(string name);
     }
 }

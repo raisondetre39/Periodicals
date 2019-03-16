@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
 using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Services;
 using Periodical.BL.ServiseInterfaces;
@@ -7,20 +6,18 @@ using Periodicals.App_Start;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Periodicals.Controllers
 {
     [ExceptionFilterAtribute]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         ITagService _tagService;
         IHostService _hostService;
         IMagazineService _magazineService;
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public HomeController(TagService tagService, HostService hostService, MagazineService magazineService )
+        public HomeController(ITagService tagService, IHostService hostService, IMagazineService magazineService )
         {
             _tagService = tagService;
             _hostService = hostService;
@@ -28,14 +25,6 @@ namespace Periodicals.Controllers
         }
 
         public HomeController() { }
-
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
 
         public ActionResult Index(string message = "", string displayCondition = "")
         {
@@ -45,7 +34,7 @@ namespace Periodicals.Controllers
                 .ToArray();
             List<MagazineDTO> MagazinesDTO;
             log.Debug($"Display magazines by paticular condition: {displayCondition} if it excists");
-            if (!String.IsNullOrEmpty(displayCondition))
+            if (!string.IsNullOrEmpty(displayCondition))
             {
                 log.Debug($"Chose annaproperiate condition");
                 if (displayCondition == "all")

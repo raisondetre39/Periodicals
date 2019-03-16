@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Periodicals.DAL", "Periodic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Periodical.BL", "Periodical.BL\Periodical.BL.csproj", "{D9E5748A-E00D-4514-9791-73A0ED6CF573}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPeriodical.UnitTests", "Periodical.Tests\TestPeriodical.UnitTests.csproj", "{2951E0F9-BCF0-4F6C-A085-77DD716D72D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D9E5748A-E00D-4514-9791-73A0ED6CF573}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9E5748A-E00D-4514-9791-73A0ED6CF573}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9E5748A-E00D-4514-9791-73A0ED6CF573}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2951E0F9-BCF0-4F6C-A085-77DD716D72D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2951E0F9-BCF0-4F6C-A085-77DD716D72D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2951E0F9-BCF0-4F6C-A085-77DD716D72D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2951E0F9-BCF0-4F6C-A085-77DD716D72D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
