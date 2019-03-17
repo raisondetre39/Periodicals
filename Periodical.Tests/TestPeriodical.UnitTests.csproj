@@ -80,6 +80,9 @@
   <ItemGroup>
     <Compile Include="Perioodical.Bl.Tests\AdminServiceTests.cs" />
     <Compile Include="Perioodical.Bl.Tests\HostServiceTests.cs" />
+    <Compile Include="Perioodical.Bl.Tests\TagServiceTests.cs" />
+    <Compile Include="Perioodical.Bl.Tests\MagazineServiceTest.cs" />
+    <Compile Include="Perioodical.Bl.Tests\HostMagazineServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

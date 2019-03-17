@@ -94,6 +94,61 @@ namespace Periodical.Tests.Perioodical.Bl.UnitTests
             Assert.AreEqual(expectedUserId, result.Id);
         }
 
+        [TestMethod]
+        public void Edit_ThereIsNoHostEdited_ReturnsOperationStatusFailure()
+        {
+            _mockUnitOfWork.Setup(unitOfWork => unitOfWork.HostRepository)
+                .Returns(_mockHostRepository.Object);
 
+            var result = _hostService.Edit(null);
+
+            Assert.IsFalse(result.Succedeed);
+        }
+
+        [TestMethod]
+        public void Edit_ThereIsHostEdited_ReturnsOperationStatusSyccses()
+        {
+            _mockUnitOfWork.Setup(unitOfWork => unitOfWork.HostRepository)
+                .Returns(_mockHostRepository.Object);
+
+            var result = _hostService.Edit(new HostDTO());
+
+            Assert.IsTrue(result.Succedeed);
+        }
+
+        [TestMethod]
+        public void Get_ThereIsOneUser_ReturnsOneUser()
+        {
+            const string userEmail = "email.@email.com";
+            const string expectedEmail = "email.@email.com";
+
+            _mockHostRepository.Setup(repository => repository.GetOne(It.IsAny<Func<Host, bool>>()))
+                .Returns(new Host() { Email = userEmail });
+            _mockUnitOfWork.Setup(unitOfWork => unitOfWork.HostRepository)
+                .Returns(_mockHostRepository.Object);
+            _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
+                .Returns(_mockMagazineRepository.Object);
+
+            var result = _hostService.Get(userEmail);
+
+            Assert.AreEqual(expectedEmail, result.Email);
+        }
+
+        [TestMethod]
+        public void Get_ThereIsNoUser_ReturnsNull()
+        {
+            const string userEmail = "email.@email.com";
+
+            _mockHostRepository.Setup(repository => repository.GetOne(It.IsAny<Func<Host, bool>>()))
+                .Returns(() => null);
+            _mockUnitOfWork.Setup(unitOfWork => unitOfWork.HostRepository)
+                .Returns(_mockHostRepository.Object);
+            _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
+                .Returns(_mockMagazineRepository.Object);
+
+            var result = _hostService.Get(userEmail);
+
+            Assert.AreEqual(null, result);
+        }
     }
 }

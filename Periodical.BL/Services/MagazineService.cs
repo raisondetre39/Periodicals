@@ -23,36 +23,37 @@ namespace Periodical.BL.Services
 
         public OperationStatus Create(MagazineDTO magazineDTO, HostDTO author)
         {
-            Magazine magazine = MagazineDTO.ToMagazine(magazineDTO, author.Id);
-            log.Debug($"Auhtor with id: {author.Id} is trying to create magazine: {magazineDTO.MagazineName}");
-            if (magazine != null)
+            Magazine magazineCurrent = Database.MagazineRepository.GetOne(magazine => magazine.MagazineName == magazineDTO.MagazineName);
+            log.Debug($"Author is trying to create magazine");
+            if (magazineCurrent == null)
             {
-                Database.MagazineRepository.Create(magazine);
+                magazineCurrent = MagazineDTO.ToMagazine(magazineDTO, author.Id);
+                Database.MagazineRepository.Create(magazineCurrent);
                 Host authorEdited = Database.HostRepository.GetById(author.Id);
-                authorEdited.Magazines.Add(magazine);
-                log.Info("Magazine created succsesfully");
+                authorEdited.Magazines.Add(magazineCurrent);
+                log.Info($"Magazine with name: {magazineDTO.MagazineName} created succsesfully by uhtor with id: {author.Id} ");
                 return new OperationStatus(true, "Create was succsesfull", "");
             }
             else
             {
-                log.Warn($"Auhtor with id: {author.Id} denied to create magazine: {magazineDTO.MagazineName}");
+                log.Warn($"Auhtor denied to create magazine");
                 return new OperationStatus(false, "Something went wrong", "MagazineCreate");
             }
         }
 
         public OperationStatus Edit(MagazineDTO magazineDTO)
         {
-            Magazine magazineEdited = MagazineDTO.ToMagazine(magazineDTO, magazineDTO.HostId);
-            log.Debug($"Auhtor with id: {magazineDTO.HostId} is trying to edit magazine: {magazineDTO.Id}");
-            if (magazineEdited != null)
+            log.Debug($"Author is trying to edit magazine");
+            if (magazineDTO != null)
             {
+                Magazine magazineEdited = MagazineDTO.ToMagazine(magazineDTO, magazineDTO.HostId);
                 Database.MagazineRepository.Update(magazineEdited);
-                log.Info($"Magazine with id: {magazineDTO.Id} updated succsesfully");
+                log.Info($"Magazine with id: {magazineDTO.Id} updated succsesfully by auhtor with id: {magazineDTO.HostId}");
                 return new OperationStatus(true, "Update was succsesfull", "");
             }
             else
             {
-                log.Warn($"Auhtor with id: {magazineDTO.HostId} denied to update magazine: {magazineDTO.MagazineName}");
+                log.Warn($"Auhtor denied to update magazine");
                 return new OperationStatus(false, "Something went wrong", "MagazineUpdate");
             }
         }
@@ -65,31 +66,20 @@ namespace Periodical.BL.Services
             return magazineDTO;
         }
 
-        public MagazineDTO Get(string name)
-        {
-            Magazine magazineCurrent = Database.MagazineRepository.GetOne(magazine => magazine.MagazineName == name);
-            log.Debug($"Sent request to data base to magazine with name: {name}");
-            if (magazineCurrent != null)
-            {
-                MagazineDTO magazineDTO = MagazineDTO.ToMagazineDTO(magazineCurrent);
-                log.Info($"Magazine with name: {name} find succsesfuly");
-                return magazineDTO;
-            }
-            return null;
-        }
-
-        public IEnumerable<MagazineDTO> GetAll()
+        public List<MagazineDTO> GetAll()
         {
             log.Info("Sent request to data base to get all magazines");
             return Database.MagazineRepository.GetAll()
-                .Select(magazine => MagazineDTO.ToMagazineDTO(magazine));
+                .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
+                .ToList();
         }
 
-        public IEnumerable<MagazineDTO> GetBy(string name)
+        public List<MagazineDTO> GetBy(string name)
         {
             log.Info($"Sent request to data base to get all magazines with name: {name}");
             return Database.MagazineRepository.Get(magazine => magazine.MagazineName == name)
-                .Select(magazine => MagazineDTO.ToMagazineDTO(magazine));
+                .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
+                .ToList();
         }
 
         public OperationStatus Delete(int? id)

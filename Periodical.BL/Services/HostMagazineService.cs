@@ -24,17 +24,17 @@ namespace Periodical.BL.Services
         public OperationStatus Create(HostDTO userDTO, int magasineId)
         {
             Host hostEdited = Database.HostRepository.GetById(userDTO.Id);
-            hostEdited.Magazines.Add(Database.MagazineRepository.GetById(magasineId));
-            log.Info($"User with id: {userDTO.Id} is trying to add to own list magazine with id {magasineId}");
+            log.Info($"User is trying to add to own list magazine");
             if (hostEdited != null)
             {
+                hostEdited.Magazines.Add(Database.MagazineRepository.GetById(magasineId));
                 Database.HostRepository.Update(hostEdited);
-                log.Info("Magazine added succsesfully");
+                log.Info($"Magazine with id: {magasineId} added succsesfully to user with id: {userDTO.Id}");
                 return new OperationStatus(true, "Changes were succsesfull", "");
             }
             else
             {
-                log.Info($"User is denied to add magazine with id: {magasineId} to list");
+                log.Info($"User is denied to add magazine to list");
                 return new OperationStatus(false, "Something went wrong", "ProfileChange");
             }
         }
@@ -60,11 +60,11 @@ namespace Periodical.BL.Services
             }
         }
 
-        public IEnumerable<MagazineDTO> GetUserMagazines(int id)
+        public List<MagazineDTO> GetUserMagazines(int id)
         {
             log.Info($"Get all user`s ( id: {id} ) magazines");
-            return Database.HostRepository.GetById(id)
-                .Magazines
+            return Database.MagazineRepository
+                .Get(magazine => magazine.Hosts.Contains(Database.HostRepository.GetById(id)))
                 .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
                 .ToList();
         }

@@ -6,12 +6,12 @@ namespace Periodical.BL.ServiseInterfaces
 {
     public interface ITagService
     {
-        IEnumerable<Tag> GetAll();
+        List<Tag> GetAll();
 
         Tag Get(string name);
 
         Tag GetById(int? id);
 
-        IEnumerable<MagazineDTO> GetByTagName(string name);
+        List<MagazineDTO> GetByTagName(string name);
     }
 }

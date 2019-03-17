@@ -73,7 +73,7 @@ namespace Periodical.BL.Services
 
         public OperationStatus Edit(HostDTO host)
         {
-            log.Debug($"Host with id: {host.Id} is trying to edit profile");
+            log.Debug($"Host is trying to edit profile");
             if (host != null)
             {
                 Database.HostRepository.Update(HostDTO.ToHost(host));
@@ -83,7 +83,7 @@ namespace Periodical.BL.Services
             }
             else
             {
-                log.Warn($"Host with id: {host.Id} denied to update profile");
+                log.Warn($"Host denied to update profile");
                 return new OperationStatus(false, "Something went wrong", "ProfileChange");
             }
         }
@@ -91,7 +91,10 @@ namespace Periodical.BL.Services
         public HostDTO Get(string email)
         {
             log.Info($"Sent request to data base to get host with email: {email}");
-            return HostDTO.ToHostDTO(Database.HostRepository.GetOne(host => host.Email == email));
+            Host currentHost = Database.HostRepository.GetOne(host => host.Email == email);
+            if(currentHost != null)
+                return HostDTO.ToHostDTO(currentHost);
+            return null;
         }
 
         public List<HostDTO> GetAll()

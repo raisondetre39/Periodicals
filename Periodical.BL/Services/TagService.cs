@@ -19,10 +19,10 @@ namespace Periodical.BL.Services
             Database = unitOfWork;
         }
 
-        public IEnumerable<Tag> GetAll()
+        public List<Tag> GetAll()
         {
             log.Info("Sent request to data base to get all tags");
-            return Database.TagRepository.GetAll();
+            return Database.TagRepository.GetAll().ToList();
         }
 
         public Tag Get(string name)
@@ -37,13 +37,17 @@ namespace Periodical.BL.Services
             return Database.TagRepository.GetById(id);
         }
 
-        public IEnumerable<MagazineDTO> GetByTagName(string name)
+        public List<MagazineDTO> GetByTagName(string name)
         {
             log.Info($"Sent request to data base to get magazine contains tag with name: {name}");
-            return Database.TagRepository.GetOne(tag => tag.TagName == name)
-                .Magazines
-                .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
+            List<Magazine> magazinesContainsCurrentTag = Database.MagazineRepository
+                .Get(magazine => magazine.Tags.Contains(Database.TagRepository.GetOne(tag => tag.TagName == name)))
                 .ToList();
+            if (magazinesContainsCurrentTag.Count > 0)
+                return magazinesContainsCurrentTag
+                    .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
+                    .ToList();
+            return new List<MagazineDTO>();
         }
     }
 }
