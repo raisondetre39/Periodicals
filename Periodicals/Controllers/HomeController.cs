@@ -6,10 +6,14 @@ using Periodicals.App_Start;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace Periodicals.Controllers
 {
+    /// <summary>
+    /// Main controller displays all magazines
+    /// </summary>
     [ExceptionFilterAtribute]
     public class HomeController : BaseController
     {
@@ -23,9 +27,14 @@ namespace Periodicals.Controllers
             _hostService = hostService;
             _magazineService = magazineService;
         }
+        
 
-        public HomeController() { }
-
+        /// <summary>
+        /// Method displays all magazines match paticular condition
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="displayCondition"></param>
+        /// <returns>List of magazines</returns>
         public ActionResult Index(string message = "", string displayCondition = "")
         {
             ViewBag.Message = message;
@@ -59,7 +68,7 @@ namespace Periodicals.Controllers
                        .ToList();
                     log.Info("Display magazines odered by magazine name");
                 }
-                else if(displayCondition.Substring(0, 3) == "tag")
+                else if(displayCondition.Length > 3 && displayCondition.Substring(0, 3) == "tag")
                 {
                     MagazinesDTO = _tagService.GetByTagName(displayCondition.Substring(3)).ToList();
                     log.Info($"Display magazines contains tag: {displayCondition.Substring(3)}");
@@ -85,9 +94,14 @@ namespace Periodicals.Controllers
             return View("Index", MagazinesDTO);
         }
 
+        /// <summary>
+        /// Method returns correct route to user account
+        /// </summary>
+        /// <returns>Account</returns>
         public ActionResult ChooseRole()
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
+            HttpContext.Response.Cookies["Role"].Value  = hostDTO.Role;
             return RedirectToRoute(new { area = hostDTO.Role, controller = $"{hostDTO.Role}Account", action = $"{hostDTO.Role}Account" });
         }
 
@@ -111,12 +125,20 @@ namespace Periodicals.Controllers
             return Index("", sortCondition);
         }
 
+        /// <summary>
+        /// Method gets from form magazines name
+        /// </summary>
+        /// <returns>Name on which will be searched paticular magazine</returns>
         [HttpPost]
         public ActionResult FindByName()
         {
             return Index("", Request.Params["Name"]);
         }
 
+        /// <summary>
+        /// Method gets tag name from form
+        /// </summary>
+        /// <returns>Tag name on which will be searchd all magazines contains that tag</returns>
         [HttpPost]
         public ActionResult FindByTag()
         {

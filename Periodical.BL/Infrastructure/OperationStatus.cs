@@ -1,6 +1,8 @@
 ﻿namespace Periodical.BL.Infrastructure
 {
-    // Contains details about operation
+    /// <summary>
+    /// Claas creates instance to get information about operation status and its details
+    /// </summary>
     public class OperationStatus
     {
         public bool Succedeed { get; private set; }

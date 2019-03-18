@@ -2,6 +2,9 @@
 
 namespace Periodicals.DAL.Publishings
 {
+    /// <summary>
+    ///  Class creates properties to work with tags table
+    /// </summary>
     public class Tag
     {
         public int TagId { get; set; }

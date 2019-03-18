@@ -9,6 +9,9 @@ using System.Web.Mvc;
 
 namespace Periodicals.Areas.Admin.Controllers
 {
+    /// <summary>
+    /// Controller manages all operations provided to paticular user with admin role
+    /// </summary>
     [AccountAuthorize(Roles = "Admin")]
     [ExceptionFilterAtribute]
     public class AdminAccountController : BaseController
@@ -24,6 +27,9 @@ namespace Periodicals.Areas.Admin.Controllers
             _hostService = hostService;
         }
 
+        /// <summary>
+        /// Displays all info about admin and blocked and unlocked users
+        /// </summary>
         public ActionResult AdminAccount()
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));

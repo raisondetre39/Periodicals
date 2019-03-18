@@ -5,6 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Periodicals.DAL.Publishings
 {
+    /// <summary>
+    ///  Class creates properties to work with magazines table
+    /// </summary>
     public class Magazine
     {
         public int MagazineId { get; set; }
@@ -14,7 +17,6 @@ namespace Periodicals.DAL.Publishings
         [DataType(DataType.Date)]
         public DateTime PublishDate { get; set; }
 
-        [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
         [DataType(DataType.Currency)]
@@ -28,7 +30,7 @@ namespace Periodicals.DAL.Publishings
 
         public int? HostId { get; set; }
 
-        public Host Host { get; set; }
+        public virtual Host Host { get; set; }
 
         public Magazine()
         {

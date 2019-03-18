@@ -10,6 +10,9 @@ using System.Web.Mvc;
 
 namespace Periodicals.Areas.Author.Controllers
 {
+    /// <summary>
+    /// Controller manages all operations provided to paticular user with author role
+    /// </summary>
     [AccountAuthorize(Roles = "Author")]
     [ExceptionFilterAtribute]
     public class AuthorAccountController : BaseController
@@ -30,6 +33,9 @@ namespace Periodicals.Areas.Author.Controllers
             _hostMagazineService = hostMagazineService;
         }
 
+        /// <summary>
+        /// Displays all info about author and him magazines
+        /// </summary>
         public ActionResult AuthorAccount()
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
@@ -82,7 +88,8 @@ namespace Periodicals.Areas.Author.Controllers
                     magazine.Tags.Add(tag);
                 }
             }
-            _magazineService.Edit(magazine);
+            magazine.PublishDate = DateTime.Now;
+            _magazineService.Edit(magazine, Convert.ToInt32(User.Identity.GetUserId()));
             log.Info($"User id: {_hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()))} " +
                 $" sent request to change magazine ( id: {magazine.Id} )");
             return AuthorAccount();

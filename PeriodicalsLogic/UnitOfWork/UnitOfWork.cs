@@ -6,17 +6,17 @@ using System;
 
 namespace Periodicals.DAL.UnitOfWork
 {
-    // Class incapsulates all entity managers in the form of properties and stores the general data context.
+    /// <summary>
+    ///  Class incapsulates all entity managers in the form of properties and share the general data context to them
+    /// </summary>
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private PeriodicalsContext db;
 
-        public UnitOfWork(string connectionString)
+        public UnitOfWork()
         {
-            db = new PeriodicalsContext(connectionString);
+            db = new PeriodicalsContext("DefaultConnection");
         }
-
-        public UnitOfWork() { }
 
         public IGenericRepository<Tag> TagRepository { get { return new GenericRepository<Tag>(db); } }
 
@@ -46,6 +46,7 @@ namespace Periodicals.DAL.UnitOfWork
                     TagRepository.Dispose();
                     MagazineRepository.Dispose();
                     HostRepository.Dispose();
+                    db.Dispose();
                 }
                 disposed = true;
             }

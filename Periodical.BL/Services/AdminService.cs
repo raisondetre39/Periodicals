@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace Periodical.BL.Services
 {
+    /// <summary>
+    /// Class creates service which contains methods to admin account
+    /// </summary>
     public class AdminService : IAdminService
     {
         private readonly log4net.ILog log = log4net.LogManager
@@ -17,7 +20,7 @@ namespace Periodical.BL.Services
 
         public AdminService()
         {
-            Database = new UnitOfWork("DefaultConnection");
+            Database = new UnitOfWork();
         }
 
         public AdminService(IUnitOfWork unitOfWork)

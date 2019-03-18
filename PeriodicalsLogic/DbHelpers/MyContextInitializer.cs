@@ -6,6 +6,11 @@ using System.Data.Entity;
 
 namespace Periodicals.DAL.DbHelpers
 {
+    /// <summary>
+    ///  Class fills database with default data
+    ///  Clears databse each time programm runs
+    /// </summary>
+    
     public class MyContextInitializer : DropCreateDatabaseAlways<PeriodicalsContext>
     {
         protected override void Seed(PeriodicalsContext db)

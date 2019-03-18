@@ -5,6 +5,10 @@ using System.Data.Entity;
 
 namespace Periodicals.DAL.DbHelpers
 {
+    /// <summary>
+    ///  Class creates database and DbSets, with which will work
+    /// </summary>
+    
     public class PeriodicalsContext : IdentityDbContext
     {
         public DbSet<Host> Hosts { get; set; }
@@ -21,6 +25,9 @@ namespace Periodicals.DAL.DbHelpers
 
         public PeriodicalsContext() { }
 
+        /// <summary>
+        ///  Methods initialize foreing keys for connection to othe tables
+        /// </summary>
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Host>()

@@ -5,6 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Periodicals.DAL.Accounts
 {
+    /// <summary>
+    ///  Class creates fields for host's accounts
+    /// </summary>
     public class Host
     {
         [Required]

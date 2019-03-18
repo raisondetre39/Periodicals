@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Periodical.BL.Services
 {
+
+    /// <summary>
+    /// Class creates service to magage all users operations in presentation layer
+    /// </summary>
     public class HostService : IHostService
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
@@ -17,7 +21,7 @@ namespace Periodical.BL.Services
 
         public HostService()
         {
-            Database = new UnitOfWork("DefaultConnection");
+            Database = new UnitOfWork();
         }
 
         public HostService(IUnitOfWork unitOfWork)
@@ -44,6 +48,11 @@ namespace Periodical.BL.Services
             }
         }
 
+        /// <summary>
+        /// Methods creates claims base on host id and email
+        /// </summary>
+        /// <param name="hostDto"></param>
+        /// <returns>Claims</returns>
         public ClaimsIdentity Authenticate(HostDTO hostDto)
         {
             ClaimsIdentity claim = null;
@@ -53,6 +62,7 @@ namespace Periodical.BL.Services
             {
                 claim = new ClaimsIdentity("ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
                 claim.AddClaim(new Claim(ClaimTypes.NameIdentifier, host.Id.ToString(), ClaimValueTypes.String));
+                claim.AddClaim(new Claim(ClaimTypes.Role, host.Role.ToString(), ClaimValueTypes.String));
                 claim.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, host.Email, ClaimValueTypes.String));
                 claim.AddClaim(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider",
                     "OWIN Provider", ClaimValueTypes.String));
@@ -81,8 +91,30 @@ namespace Periodical.BL.Services
             log.Debug($"Host is trying to edit profile");
             if (host != null)
             {
-                Database.HostRepository.Update(HostDTO.ToHost(host));
-                Database.Save();
+                Host hostEdited = HostDTO.ToHost(host);
+                hostEdited.Password = host.Password;
+                hostEdited.Name = host.Name;
+                hostEdited.Email = host.Email;
+                Database.HostRepository.Update(hostEdited);
+                log.Info($"Host with id: {host.Id} update profile succsesfull");
+                return new OperationStatus(true, "Changes were succsesfull", "");
+            }
+            else
+            {
+                log.Warn($"Host denied to update profile");
+                return new OperationStatus(false, "Something went wrong", "ProfileChange");
+            }
+        }
+
+        public OperationStatus EditUserWallet(int id, int sum)
+        {
+            log.Debug($"Host is trying to edit profile");
+            Host host = Database.HostRepository.GetById(id);
+            if (host != null)
+            {
+                host.Wallet += sum;
+                Database.HostRepository.Update(host);
+
                 log.Info($"Host with id: {host.Id} update profile succsesfull");
                 return new OperationStatus(true, "Changes were succsesfull", "");
             }
@@ -113,12 +145,18 @@ namespace Periodical.BL.Services
         public HostDTO GetById(int? id)
         {
             log.Info($"Sent request to data base to get host with id: {id}");
-            HostDTO hostDTO =  HostDTO.ToHostDTO(Database.HostRepository.GetById(id));
-            hostDTO.Magazines = Database.MagazineRepository
-                .Get(magazine => magazine.Hosts.Contains(Database.HostRepository.GetById(id)))
+            var entity = Database.HostRepository.GetById(id);
+            HostDTO hostDTO =  HostDTO.ToHostDTO(entity);
+            hostDTO.Magazines = entity
+                .Magazines
                 .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
                 .ToList();
             return hostDTO;
+        }
+
+        public void Dispose()
+        {
+            Database.Dispose();
         }
     }
 }

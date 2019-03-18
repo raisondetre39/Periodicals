@@ -10,6 +10,9 @@ using System.Web.Mvc;
 
 namespace Periodicals.Areas.User.Controllers
 {
+    /// <summary>
+    /// Controller manages all operations provided to paticular user with host role
+    /// </summary>
     [AccountAuthorize(Roles = "User")]
     [ExceptionFilterAtribute]
     public class UserAccountController : BaseController
@@ -27,6 +30,10 @@ namespace Periodicals.Areas.User.Controllers
             _hostMagazineService = hostMagazineService;
         }
 
+        /// <summary>
+        /// Displays all info about user and user's account
+        /// </summary>
+        /// <returns></returns>
         public ActionResult UserAccount()
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
@@ -40,14 +47,16 @@ namespace Periodicals.Areas.User.Controllers
              return View("EditWallet");
         }
 
+        /// <summary>
+        /// Method provides to add money to use's wallet
+        /// </summary>
+        /// <param name="debitCardModel"></param>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditWallet(DebitCardModel debitCardModel)
         {
-            HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
-            hostDTO.Wallet += debitCardModel.Sum;
-            _hostService.Edit(hostDTO);
-            log.Info($"User id: {hostDTO.Id} sent request to change wallet value");
+            _hostService.EditUserWallet(Convert.ToInt32(User.Identity.GetUserId()), debitCardModel.Sum);
+            log.Info($"User id: {Convert.ToInt32(User.Identity.GetUserId())} sent request to change wallet value");
             return UserAccount();
         }
 
@@ -61,13 +70,14 @@ namespace Periodicals.Areas.User.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditUser(HostDTO hostDTO)
         {
-            hostDTO.Id = Convert.ToInt32(User.Identity.GetUserId());
-            hostDTO.Role = "User";
             _hostService.Edit(hostDTO);
             log.Info($"User id: {hostDTO.Id} sent request to change profile information");
             return UserAccount();
         }
 
+        /// <summary>
+        /// Method deletes magazine from user's list
+        /// </summary>
         public ActionResult DeleteUserMagazine(int? Id)
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));

@@ -13,10 +13,14 @@ namespace Periodical.BL.Services
 
         OperationStatus Edit(HostDTO host);
 
+        OperationStatus EditUserWallet(int id, int sum);
+
         HostDTO Get(string email);
 
         List<HostDTO> GetAll();
 
         HostDTO GetById(int? id);
+
+        void Dispose();
     }
 }

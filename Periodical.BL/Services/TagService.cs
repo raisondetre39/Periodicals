@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace Periodical.BL.Services
 {
+    /// <summary>
+    /// Class creates service to manage all operations connected to tags
+    /// </summary>
     public class TagService : ITagService
     {
         private readonly log4net.ILog log = log4net.LogManager.GetLogger
@@ -16,7 +19,7 @@ namespace Periodical.BL.Services
 
         public TagService()
         {
-            Database = new UnitOfWork("DefaultConnection");
+            Database = new UnitOfWork();
         }
 
         public TagService(IUnitOfWork unitOfWork)
@@ -42,12 +45,23 @@ namespace Periodical.BL.Services
             return Database.TagRepository.GetById(id);
         }
 
+        /// <summary>
+        /// Method returns all magazines, which contains paticular tag 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public List<MagazineDTO> GetByTagName(string name)
         {
             log.Info($"Sent request to data base to get magazine contains tag with name: {name}");
-            List<Magazine> magazinesContainsCurrentTag = Database.MagazineRepository
-                .Get(magazine => magazine.Tags.Contains(Database.TagRepository.GetOne(tag => tag.TagName == name)))
-                .ToList();
+            Tag currentTag = Database.TagRepository.GetOne(tag => tag.TagName == name);
+            List<Magazine> magazinesContainsCurrentTag = Database.TagRepository
+                .GetOne(tag => tag.TagName == name)
+                .Magazines;
+                
+
+            //List<Magazine> magazinesContainsCurrentTag = Database.MagazineRepository
+            //    .Get(magazine => magazine.Tags.Any(tag => tag.TagId == currentTag.TagId))
+            //    .ToList();
             if (magazinesContainsCurrentTag.Count > 0)
                 return magazinesContainsCurrentTag
                     .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))

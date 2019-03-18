@@ -1,7 +1,6 @@
 ﻿using Microsoft.Owin.Security;
 using Periodicals.Models;
 using System.Security.Claims;
-using System.Web;
 using System.Web.Mvc;
 using Periodical.BL.Services;
 using Periodical.BL.DataTemporaryModels;
@@ -9,9 +8,13 @@ using Periodical.BL.Infrastructure;
 using Periodicals.App_Start;
 using System;
 using Microsoft.AspNet.Identity;
+using System.Web;
 
 namespace Periodicals.Controllers
 {
+    /// <summary>
+    /// Cntroller manages authenfication operations
+    /// </summary>
     [ExceptionFilterAtribute]
     public class AccountController : BaseController
     {
@@ -29,13 +32,18 @@ namespace Periodicals.Controllers
             return View("Login");
         }
 
+        /// <summary>
+        /// Method authenficate and gives claims to user
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Returns user to main page</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model)
         {
             if (ModelState.IsValid)
             {
-                HostDTO userDto = userDto = new HostDTO { Email = model.Email, Password = model.Password };
+                HostDTO userDto = new HostDTO { Email = model.Email, Password = model.Password };
                 ClaimsIdentity claim = _hostService.Authenticate(userDto);
                 log.Debug($"User with email {userDto.Email} is trying to login and get claim");
                 if (claim == null)
@@ -54,9 +62,14 @@ namespace Periodicals.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
+
             return View();
         }
 
+        /// <summary>
+        /// Method removes claims from users and lod out him
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Logout()
         {
             log.Info($"User id: {Convert.ToInt32(User.Identity.GetUserId())} logout from resource");
@@ -69,6 +82,9 @@ namespace Periodicals.Controllers
             return View("Register");
         }
 
+        /// <summary>
+        /// Method creates new user and gies him claims
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterModel model)

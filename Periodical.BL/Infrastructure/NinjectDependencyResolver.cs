@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Ninject;
 using Periodical.BL.Services;
-using Periodical.BL.ServiseInterfaces;
 
 namespace Periodical.BL.Infrastructure
 {
+    /// <summary>
+    /// Class creates DI container to transfet all services to presentation layer
+    /// </summary>
     public class NinjectDependencyResolver : IDependencyResolver
     {
         private IKernel kernel;
@@ -27,6 +29,9 @@ namespace Periodical.BL.Infrastructure
             return kernel.GetAll(serviceType);
         }
 
+        /// <summary>
+        /// Method add to kernel all binds to services
+        /// </summary>
         public void AddBindings()
         {
             kernel.Bind<HostService>().ToSelf();

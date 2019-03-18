@@ -8,7 +8,7 @@ namespace Periodical.BL.ServiseInterfaces
     {
         OperationStatus Create(MagazineDTO magazineDTO, HostDTO author);
 
-        OperationStatus Edit(MagazineDTO magazineDTO);
+        OperationStatus Edit(MagazineDTO magazineDTO, int authorId);
 
         MagazineDTO GetById(int? id);
 
@@ -17,5 +17,7 @@ namespace Periodical.BL.ServiseInterfaces
         List<MagazineDTO> GetBy(string name);
 
         OperationStatus Delete(int? id);
+
+        void Dispose();
     }
 }

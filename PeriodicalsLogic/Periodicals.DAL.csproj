@@ -79,6 +79,14 @@
     <Compile Include="Migrations\201903111322194_hostChange.Designer.cs">
       <DependentUpon>201903111322194_hostChange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903182225133_magazineChange.cs" />
+    <Compile Include="Migrations\201903182225133_magazineChange.Designer.cs">
+      <DependentUpon>201903182225133_magazineChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903182230136_magazineChange2.cs" />
+    <Compile Include="Migrations\201903182230136_magazineChange2.Designer.cs">
+      <DependentUpon>201903182230136_magazineChange2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Publishings\HostMagazine.cs" />
@@ -97,6 +105,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201903111322194_hostChange.resx">
       <DependentUpon>201903111322194_hostChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903182225133_magazineChange.resx">
+      <DependentUpon>201903182225133_magazineChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903182230136_magazineChange2.resx">
+      <DependentUpon>201903182230136_magazineChange2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

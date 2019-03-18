@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Periodical.BL.DataTemporaryModels
 {
+    /// <summary>
+    /// Class creates Host temporary model to work woth data got from presentation layer
+    /// </summary>
     public class HostDTO
     {
         public int Id { get; set; }
@@ -29,6 +32,11 @@ namespace Periodical.BL.DataTemporaryModels
             Magazines = new List<MagazineDTO>();
         }
 
+        /// <summary>
+        /// Method make covertation from HostDTO to Host
+        /// </summary>
+        /// <param name="hostDTO"></param>
+        /// <returns>Host instance</returns>
         public static Host ToHost(HostDTO hostDTO)
         {
             Host host = new Host
@@ -47,6 +55,11 @@ namespace Periodical.BL.DataTemporaryModels
             return host;
         }
 
+        /// <summary>
+        /// Method make covertation from Host to HostDTO
+        /// </summary>
+        /// <param name="host"></param>
+        /// <returns>HostDTO instance</returns>
         public static HostDTO ToHostDTO(Host host)
         {
             HostDTO hostDTO = new HostDTO

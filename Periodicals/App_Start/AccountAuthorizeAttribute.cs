@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Owin.Security;
 using System.Web;
 using System.Web.Mvc;
 
 namespace Periodicals.App_Start
 {
+    /// <summary>
+    /// Class creates attribute which allow acsses to controller methods to user whith paticular role
+    /// </summary>
     public class AccountAuthorizeAttribute : AuthorizeAttribute
     {
         private string[] _allowedRoles = new string[] { };
@@ -31,7 +32,7 @@ namespace Periodicals.App_Start
             {
                 for (int i = 0; i < _allowedRoles.Length; i++)
                 {
-                    if (httpContext.User.IsInRole(_allowedRoles[i]))
+                    if (httpContext.Request.Cookies["Role"].Value == _allowedRoles[i])
                         return true;
                 }
                 return false;

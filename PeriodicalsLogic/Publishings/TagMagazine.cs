@@ -1,5 +1,8 @@
 ﻿namespace Periodicals.DAL.Publishings
 {
+    /// <summary>
+    ///  Class creates coonection between magazines list in tag class and tags list in magazines class
+    /// </summary>
     public class TagMagazine
     {
         public int TagMagazineId { get; set; }
