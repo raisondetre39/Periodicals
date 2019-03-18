@@ -17,7 +17,7 @@ namespace Periodicals.Controllers
         IHostService _hostService;
         IMagazineService _magazineService;
 
-        public HomeController(ITagService tagService, IHostService hostService, IMagazineService magazineService )
+        public HomeController(TagService tagService, HostService hostService, MagazineService magazineService )
         {
             _tagService = tagService;
             _hostService = hostService;

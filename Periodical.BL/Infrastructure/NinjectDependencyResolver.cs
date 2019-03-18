@@ -27,13 +27,13 @@ namespace Periodical.BL.Infrastructure
             return kernel.GetAll(serviceType);
         }
 
-        private void AddBindings()
+        public void AddBindings()
         {
-            kernel.Bind<IHostService>().To<HostService>();
-            kernel.Bind<IMagazineService>().To<MagazineService>();
-            kernel.Bind<IHostMagazineService>().To<HostMagazineService>();
-            kernel.Bind<ITagService>().To<TagService>();
-            kernel.Bind<IAdminService>().To<AdminService>();
+            kernel.Bind<HostService>().ToSelf();
+            kernel.Bind<MagazineService>().ToSelf();
+            kernel.Bind<HostMagazineService>().ToSelf();
+            kernel.Bind<TagService>().ToSelf();
+            kernel.Bind<AdminService>().ToSelf();
         }
     }
 }

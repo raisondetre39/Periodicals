@@ -15,6 +15,11 @@ namespace Periodical.BL.Services
 
         IUnitOfWork Database { get; set; }
 
+        public HostService()
+        {
+            Database = new UnitOfWork("DefaultConnection");
+        }
+
         public HostService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;

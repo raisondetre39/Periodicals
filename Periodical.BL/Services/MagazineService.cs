@@ -16,6 +16,11 @@ namespace Periodical.BL.Services
 
         IUnitOfWork Database { get; set; }
 
+        public MagazineService()
+        {
+            Database = new UnitOfWork("DefaultConnection");
+        }
+
         public MagazineService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;

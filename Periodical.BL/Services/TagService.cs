@@ -14,6 +14,11 @@ namespace Periodical.BL.Services
 
         IUnitOfWork Database { get; set; }
 
+        public TagService()
+        {
+            Database = new UnitOfWork("DefaultConnection");
+        }
+
         public TagService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;

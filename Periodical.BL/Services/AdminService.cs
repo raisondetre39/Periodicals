@@ -15,6 +15,11 @@ namespace Periodical.BL.Services
 
         IUnitOfWork Database;
 
+        public AdminService()
+        {
+            Database = new UnitOfWork("DefaultConnection");
+        }
+
         public AdminService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;

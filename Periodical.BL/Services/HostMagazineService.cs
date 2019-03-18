@@ -16,10 +16,16 @@ namespace Periodical.BL.Services
 
         IUnitOfWork Database { get; set; }
 
+        public HostMagazineService()
+        {
+            Database = new UnitOfWork("DefaultConnection"); 
+        }
+
         public HostMagazineService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;
         }
+
 
         public OperationStatus Create(HostDTO userDTO, int magasineId)
         {

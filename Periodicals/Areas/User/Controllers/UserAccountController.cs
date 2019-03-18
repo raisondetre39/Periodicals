@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace Periodicals.Areas.User.Controllers
 {
+    [AccountAuthorize(Roles = "User")]
     [ExceptionFilterAtribute]
     public class UserAccountController : BaseController
     {

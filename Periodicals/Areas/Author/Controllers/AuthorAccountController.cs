@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace Periodicals.Areas.Author.Controllers
 {
+    [AccountAuthorize(Roles = "Author")]
     [ExceptionFilterAtribute]
     public class AuthorAccountController : BaseController
     {

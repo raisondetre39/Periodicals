@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace Periodicals.Areas.Admin.Controllers
 {
+    [AccountAuthorize(Roles = "Admin")]
     [ExceptionFilterAtribute]
     public class AdminAccountController : BaseController
     {
@@ -17,7 +18,7 @@ namespace Periodicals.Areas.Admin.Controllers
 
         public AdminAccountController() { }
 
-        public AdminAccountController(IAdminService adminService, IHostService hostService)
+        public AdminAccountController(AdminService adminService, HostService hostService)
         {
             _adminService = adminService;
             _hostService = hostService;

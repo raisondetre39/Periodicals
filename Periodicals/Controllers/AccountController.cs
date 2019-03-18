@@ -19,7 +19,7 @@ namespace Periodicals.Controllers
 
         public AccountController() { }
 
-        public AccountController(IHostService hostService)
+        public AccountController(HostService hostService)
         {
             _hostService = hostService;
         }
