@@ -8,6 +8,7 @@ using Periodicals.DAL.Repository;
 using Periodicals.DAL.UnitOfWork;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Periodical.Tests
 {
@@ -95,7 +96,7 @@ namespace Periodical.Tests
                 .Returns(_mockHostRepository.Object);
             const int expectedCount = 3;
 
-            var result = _adminService.GetBlockedUsers();
+            List<HostDTO> result = _adminService.GetBlockedUsers().ToList();
 
             Assert.AreEqual(expectedCount, result.Count);
         }
@@ -109,7 +110,7 @@ namespace Periodical.Tests
                 .Returns(_mockHostRepository.Object);
             const int expectedCount = 1;
 
-            var result = _adminService.GetUnlockedUsers();
+            var result = _adminService.GetUnlockedUsers().ToList();
 
             Assert.AreEqual(expectedCount, result.Count);
         }

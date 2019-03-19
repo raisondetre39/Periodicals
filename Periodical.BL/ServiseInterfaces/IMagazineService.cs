@@ -12,9 +12,9 @@ namespace Periodical.BL.ServiseInterfaces
 
         MagazineDTO GetById(int? id);
 
-        List<MagazineDTO> GetAll();
+        IEnumerable<MagazineDTO> GetAll();
 
-        List<MagazineDTO> GetBy(string name);
+        IEnumerable<MagazineDTO> GetBy(string name);
 
         OperationStatus Delete(int? id);
 

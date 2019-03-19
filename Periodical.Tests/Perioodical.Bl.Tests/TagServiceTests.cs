@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Periodical.BL.Services;
@@ -36,7 +37,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
                 .Returns(_mockTagRepository.Object);
             const int expectedCount = 3;
 
-            var result = _tagService.GetAll();
+            var result = _tagService.GetAll().ToList();
 
             Assert.AreEqual(expectedCount, result.Count);
         }
@@ -115,7 +116,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
                 .Returns(_mockMagazineRepository.Object);
             const int expectedMagazineCount = 1;
 
-            var result = _tagService.GetByTagName("fashion");
+            var result = _tagService.GetByTagName("fashion").ToList();
 
             Assert.AreEqual(expectedMagazineCount, result.Count);
         }
@@ -136,7 +137,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
                 .Returns(_mockMagazineRepository.Object);
             const int expectedMagazineCount = 0;
 
-            var result = _tagService.GetByTagName("fashion");
+            var result = _tagService.GetByTagName("fashion").ToList();
 
             Assert.AreEqual(expectedMagazineCount, result.Count);
         }

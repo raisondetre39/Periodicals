@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Periodical.BL.DataTemporaryModels;
@@ -64,7 +65,7 @@ namespace Periodical.Tests.Perioodical.Bl.UnitTests
                 .Returns(_mockHostRepository.Object);
             const int expectedCount = 5;
 
-            var result = _hostService.GetAll();
+            var result = _hostService.GetAll().ToList();
 
             Assert.AreEqual(expectedCount, result.Count);
         }

@@ -118,7 +118,6 @@ namespace Periodicals.Controllers
                             IsPersistent = true
                         }, claim);
                         log.Info($"User with email: {model.Email} and password {model.Password} provided access to resource");
-                        return RedirectToRoute(new { area = $"{Request.Params["role2"]}", controller = $"{Request.Params["role2"]}Account", action = $"{Request.Params["role2"]}Account" });
                     }
                 }
                 else

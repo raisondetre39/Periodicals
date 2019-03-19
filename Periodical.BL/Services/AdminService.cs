@@ -64,7 +64,7 @@ namespace Periodical.BL.Services
             }
         }
 
-        public List<HostDTO> GetBlockedUsers()
+        public IEnumerable<HostDTO> GetBlockedUsers()
         {
             log.Info("Requet to data base to get blocked users");
             return Database.HostRepository.Get(host => host.IsBlocked)
@@ -72,7 +72,7 @@ namespace Periodical.BL.Services
                 .ToList();
         }
 
-        public List<HostDTO> GetUnlockedUsers()
+        public IEnumerable<HostDTO> GetUnlockedUsers()
         {
             log.Info("Requet to data base to get unlocked users");
             return Database.HostRepository.Get(host => !host.IsBlocked && host.Email != "admin@gmail.com")

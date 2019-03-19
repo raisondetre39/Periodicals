@@ -110,7 +110,7 @@ namespace Periodicals.DAL.Repository
         /// </summary>
         public virtual void Update(TEntity entity)
         {
-            _dbSet.Attach(entity);
+            _dbContext.Entry(entity).State = EntityState.Modified;
             _dbContext.SaveChanges();           
         }
 

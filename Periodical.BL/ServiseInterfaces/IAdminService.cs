@@ -10,8 +10,8 @@ namespace Periodical.BL.ServiseInterfaces
 
         OperationStatus BlockUser(int? id);
 
-        List<HostDTO> GetBlockedUsers();
+        IEnumerable<HostDTO> GetBlockedUsers();
 
-        List<HostDTO> GetUnlockedUsers();
+        IEnumerable<HostDTO> GetUnlockedUsers();
     }
 }

@@ -77,7 +77,7 @@ namespace Periodicals.Controllers
                     log.Debug("Checking if display condition annaproperiate to another filter");
                     if (_magazineService.GetBy(displayCondition) != null)
                     {
-                        MagazinesDTO = _magazineService.GetBy(displayCondition);
+                        MagazinesDTO = _magazineService.GetBy(displayCondition).ToList();
                     }
                     else
                     {

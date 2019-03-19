@@ -37,7 +37,7 @@ namespace Periodical.BL.Services
             if (magazineCurrent == null)
             {
                 Host authorEdited = Database.HostRepository.GetById(author.Id);
-                authorEdited.Magazines.Add(magazineCurrent);
+                authorEdited.Magazines.Add(MagazineDTO.ToMagazine(magazineDTO));
                 Database.HostRepository.Update(authorEdited);
                 var magazine = MagazineDTO.ToMagazine(magazineDTO, author.Id);
                 Database.MagazineRepository.Create(magazine);
@@ -75,7 +75,7 @@ namespace Periodical.BL.Services
             return magazineDTO;
         }
 
-        public List<MagazineDTO> GetAll()
+        public IEnumerable<MagazineDTO> GetAll()
         {
             log.Info("Sent request to data base to get all magazines");
             return Database.MagazineRepository.GetAll()
@@ -83,7 +83,7 @@ namespace Periodical.BL.Services
                 .ToList();
         }
 
-        public List<MagazineDTO> GetBy(string name)
+        public IEnumerable<MagazineDTO> GetBy(string name)
         {
             log.Info($"Sent request to data base to get all magazines with name: {name}");
             return Database.MagazineRepository.Get(magazine => magazine.MagazineName == name)

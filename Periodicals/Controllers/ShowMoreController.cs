@@ -58,7 +58,7 @@ namespace Periodicals.Controllers
         public ActionResult AddUserMagazine(int? Id)
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
-            List<MagazineDTO> userMagazines = _hostMagazineService.GetUserMagazines(hostDTO.Id);
+            List<MagazineDTO> userMagazines = _hostMagazineService.GetUserMagazines(hostDTO.Id).ToList();
             string message;
             log.Debug("User is trying to add magazine to user list");
             MagazineDTO magazine = _magazineService.GetById(Id);

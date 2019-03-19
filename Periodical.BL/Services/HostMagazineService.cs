@@ -72,7 +72,7 @@ namespace Periodical.BL.Services
             }
         }
 
-        public List<MagazineDTO> GetUserMagazines(int id)
+        public IEnumerable<MagazineDTO> GetUserMagazines(int id)
         {
             log.Info($"Get all user`s ( id: {id} ) magazines");
             return Database.HostRepository.GetById(id)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Periodical.BL.DataTemporaryModels;
@@ -52,7 +53,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
                 .Returns(_mockMagazineRepository.Object);
             const int expectedMagazinesCount = 2;
 
-            var result = _hostMagazineService.GetUserMagazines(userId);
+            var result = _hostMagazineService.GetUserMagazines(userId).ToList();
 
             Assert.AreEqual(expectedMagazinesCount, result.Count);
         }
@@ -80,7 +81,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
                 .Returns(_mockMagazineRepository.Object);
             const int expectedMagazinesCount = 0;
 
-            var result = _hostMagazineService.GetUserMagazines(userId);
+            var result = _hostMagazineService.GetUserMagazines(userId).ToList();
 
             Assert.AreEqual(expectedMagazinesCount, result.Count);
         }

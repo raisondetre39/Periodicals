@@ -35,7 +35,7 @@ namespace Periodical.BL.Services
             log.Debug($"User is trying to create {role} profile");
             if (host == null)
             {
-                host = new Host { Email = hostDto.Email, Name = hostDto.Email, Role = role, Password = hostDto.Password };
+                host = new Host { Email = hostDto.Email, Name = hostDto.Email, Role = role, Password = hostDto.Password, TryingsToEnter = 0};
                 Database.HostRepository.Create(host);
                 Database.Save();
                 log.Info($"User with email: {host.Email} created profile succsesfuly");
@@ -134,7 +134,7 @@ namespace Periodical.BL.Services
             return null;
         }
 
-        public List<HostDTO> GetAll()
+        public IEnumerable<HostDTO> GetAll()
         {
             log.Info($"Sent request to data base to get all hosts");
             return Database.HostRepository.GetAll()

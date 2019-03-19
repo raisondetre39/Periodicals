@@ -10,6 +10,6 @@ namespace Periodical.BL.ServiseInterfaces
 
         OperationStatus Delete(HostDTO userDTO, int? magasineId);
 
-        List<MagazineDTO> GetUserMagazines(int id);
+        IEnumerable<MagazineDTO> GetUserMagazines(int id);
     }
 }

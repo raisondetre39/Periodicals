@@ -27,7 +27,7 @@ namespace Periodical.BL.Services
             Database = unitOfWork;
         }
 
-        public List<Tag> GetAll()
+        public IEnumerable<Tag> GetAll()
         {
             log.Info("Sent request to data base to get all tags");
             return Database.TagRepository.GetAll().ToList();
@@ -50,7 +50,7 @@ namespace Periodical.BL.Services
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public List<MagazineDTO> GetByTagName(string name)
+        public IEnumerable<MagazineDTO> GetByTagName(string name)
         {
             log.Info($"Sent request to data base to get magazine contains tag with name: {name}");
             List<Magazine> magazinesContainsCurrentTag = Database.TagRepository
