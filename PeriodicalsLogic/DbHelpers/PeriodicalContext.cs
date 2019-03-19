@@ -9,7 +9,7 @@ namespace Periodicals.DAL.DbHelpers
     ///  Class creates database and DbSets, with which will work
     /// </summary>
     
-    public class PeriodicalsContext : IdentityDbContext
+    public class PeriodicalsContext : IdentityDbContext, IDbContext
     {
         public DbSet<Host> Hosts { get; set; }
 

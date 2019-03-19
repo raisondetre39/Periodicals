@@ -20,6 +20,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
         private Mock<IUnitOfWork> _mockUnitOfWork;
         private Mock<IGenericRepository<Host>> _mockHostRepository;
         private Mock<IGenericRepository<Magazine>> _mockMagazineRepository;
+        private Mock<IGenericRepository<Tag>> _mockTagRepository;
 
         [TestInitialize]
         public void Initialize()
@@ -28,6 +29,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
             _mockMagazineRepository = new Mock<IGenericRepository<Magazine>>();
             _mockHostRepository = new Mock<IGenericRepository<Host>>();
             _magazineService = new MagazineService(_mockUnitOfWork.Object);
+            _mockTagRepository = new Mock<IGenericRepository<Tag>>();
         }
 
         [TestMethod]
@@ -103,7 +105,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
                 .Returns(_mockMagazineRepository.Object);
 
-            var result = _magazineService.Edit(null, 0);
+            var result = _magazineService.Edit(null, 0, new int[] { 1 });
 
             Assert.IsFalse(result.Succedeed);
         }
@@ -114,7 +116,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
                 .Returns(_mockMagazineRepository.Object);
 
-            var result = _magazineService.Edit(new MagazineDTO(), 1);
+            var result = _magazineService.Edit(new MagazineDTO(), 1, new int[] { 1 });
 
             Assert.IsTrue(result.Succedeed);
         }
@@ -128,7 +130,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
                 .Returns(_mockMagazineRepository.Object);
 
-            var result = _magazineService.Create(new MagazineDTO(), new HostDTO());
+            var result = _magazineService.Create(new MagazineDTO(), 1, new int[] { 1 });
 
             Assert.IsFalse(result.Succedeed);
         }
@@ -137,17 +139,23 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
         public void Create_ThereIsNoSuchMagazineInDataBase_ReturnsOperationStatusSuccses()
         {
             const int userId = 1;
+            const int tagId = 1;
             _mockHostRepository.Setup(repository => repository.GetById(userId))
                 .Returns(new Host() { Id = userId });
             _mockMagazineRepository.Setup(repository => repository.GetOne(It.IsAny<Func<Magazine, bool>>()))
                 .Returns(() => null);
+            _mockTagRepository.Setup(repository => repository.GetById(tagId))
+                .Returns(new Tag() { TagId = tagId });
 
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
                 .Returns(_mockMagazineRepository.Object);
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.HostRepository)
                 .Returns(_mockHostRepository.Object);
+            _mockUnitOfWork.Setup(unitOfWork => unitOfWork.TagRepository)
+                .Returns(_mockTagRepository.Object);
 
-            var result = _magazineService.Create(new MagazineDTO(), new HostDTO() { Id = userId });
+
+            var result = _magazineService.Create(new MagazineDTO(), userId, new int[] { 1 });
 
             Assert.IsTrue(result.Succedeed);
         }

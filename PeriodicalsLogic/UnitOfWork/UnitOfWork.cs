@@ -2,54 +2,35 @@
 using Periodicals.DAL.DbHelpers;
 using Periodicals.DAL.Publishings;
 using Periodicals.DAL.Repository;
-using System;
 
 namespace Periodicals.DAL.UnitOfWork
 {
     /// <summary>
     ///  Class incapsulates all entity managers in the form of properties and share the general data context to them
     /// </summary>
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
         private PeriodicalsContext db;
 
-        public UnitOfWork()
+        public UnitOfWork( IGenericRepository<Tag> tagRepository, IGenericRepository<Magazine> magaxineRepozitory,
+            IGenericRepository<Host> hostRepository)
         {
             db = new PeriodicalsContext("DefaultConnection");
+            TagRepository = tagRepository;
+            HostRepository = hostRepository;
+            MagazineRepository = magaxineRepozitory;
         }
 
-        public IGenericRepository<Tag> TagRepository { get { return new GenericRepository<Tag>(db); } }
+        public IGenericRepository<Tag> TagRepository { get; }
 
-        public IGenericRepository<Magazine> MagazineRepository { get{ return new GenericRepository<Magazine>(db); } }
+        public IGenericRepository<Magazine> MagazineRepository { get; }
 
-        public IGenericRepository<Host> HostRepository{ get { return new GenericRepository<Host>(db); } }
+        public IGenericRepository<Host> HostRepository{ get; }
 
         public void Save()
         {
             db.SaveChanges();
         }
 
-        public void Dispose()
-        {
-            Dispose(false);
-            GC.SuppressFinalize(this);
-        }
-
-        private bool disposed = false;
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    TagRepository.Dispose();
-                    MagazineRepository.Dispose();
-                    HostRepository.Dispose();
-                    db.Dispose();
-                }
-                disposed = true;
-            }
-        }
     }
 }

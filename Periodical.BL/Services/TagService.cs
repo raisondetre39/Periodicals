@@ -15,12 +15,7 @@ namespace Periodical.BL.Services
         private readonly log4net.ILog log = log4net.LogManager.GetLogger
             (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        IUnitOfWork Database { get; set; }
-
-        public TagService()
-        {
-            Database = new UnitOfWork();
-        }
+        private IUnitOfWork Database { get; set; }
 
         public TagService(IUnitOfWork unitOfWork)
         {

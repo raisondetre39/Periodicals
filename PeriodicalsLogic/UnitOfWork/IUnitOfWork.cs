@@ -18,9 +18,5 @@ namespace Periodicals.DAL.UnitOfWork
         IGenericRepository<Host> HostRepository { get; }
 
         void Save();
-
-        void Dispose();
-
-        void Dispose(bool disposed);
     }
 }

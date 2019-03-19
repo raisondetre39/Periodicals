@@ -27,7 +27,7 @@ namespace Periodical.BL.DataTemporaryModels
         public string Cover { get; set; }
 
         public virtual List<HostDTO> Hosts { get; set; }
-
+        
         public virtual List<Tag> Tags { get; set; }
 
         public int HostId { get; set; }
@@ -43,6 +43,7 @@ namespace Periodical.BL.DataTemporaryModels
         {
             Magazine magazine = new Magazine()
             {
+                MagazineId = magazineDTO.Id,
                 MagazineName = magazineDTO.MagazineName,
                 HostId = authorId,
                 Cover = magazineDTO.Cover,
@@ -63,6 +64,7 @@ namespace Periodical.BL.DataTemporaryModels
         {
             Magazine magazine = new Magazine()
             {
+                MagazineId = magazineDTO.Id,
                 MagazineName = magazineDTO.MagazineName,
                 HostId = magazineDTO.HostId,
                 Cover = magazineDTO.Cover,

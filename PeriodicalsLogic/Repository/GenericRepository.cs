@@ -1,6 +1,4 @@
-﻿using Periodicals.DAL.DbHelpers;
-using Periodicals.DAL.Publishings;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -13,36 +11,25 @@ namespace Periodicals.DAL.Repository
     public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class, new()
     {
-        private PeriodicalsContext _dbContext;
+        private IDbContext _dbContext;
         private DbSet<TEntity> _dbSet;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger
             (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public GenericRepository(PeriodicalsContext context)
+        public GenericRepository(IDbContext context)
         {
             _dbContext = context;
             _dbSet = context.Set<TEntity>();
         }
-
-        public GenericRepository() { }
+        
 
         /// <summary>
         ///  Method creates new instanse in dat base
         /// </summary>
         public virtual void Create(TEntity entity)
         {
-            try
-            {
-                _dbContext.Set<TEntity>().Add(entity);
-                //_dbSet.Add(entity);
-                _dbContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                _dbSet.Add(entity);
-                _dbContext.SaveChanges();
-            }
+             _dbContext.Set<TEntity>().Add(entity);
+             _dbContext.SaveChanges();
         }
 
         /// <summary>
@@ -86,7 +73,6 @@ namespace Periodicals.DAL.Repository
         {
             try
             {
-                _dbContext.Configuration.ProxyCreationEnabled = false;
                 log.Info($"Request to get {typeof(TEntity)}s by condition: {predicate} from databse");
                 return _dbSet.Where(predicate).ToList();
             }
@@ -105,7 +91,7 @@ namespace Periodicals.DAL.Repository
             try
             {
                 log.Info($"Request to get {typeof(TEntity)} by condition: {predicate} from databse");
-                return _dbSet.Single(predicate);
+                return _dbSet.FirstOrDefault(predicate);
             }
             catch (Exception ex)
             {
@@ -120,7 +106,7 @@ namespace Periodicals.DAL.Repository
         public virtual void Update(TEntity entity)
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();           
+            _dbContext.SaveChanges();
         }
 
         public void Dispose()

@@ -1,7 +1,6 @@
 ﻿using Periodical.BL.DataTemporaryModels;
 using Periodical.BL.Infrastructure;
 using Periodical.BL.ServiseInterfaces;
-using Periodicals.DAL.Accounts;
 using Periodicals.DAL.Publishings;
 using Periodicals.DAL.UnitOfWork;
 using System;
@@ -13,35 +12,44 @@ namespace Periodical.BL.Services
     /// <summary>
     /// Class creates service to manage all operations with magazines
     /// </summary>
-    public class MagazineService : IMagazineService, IDisposable
+    public class MagazineService : IMagazineService
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
             (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        IUnitOfWork Database { get; set; }
-
-        public MagazineService()
-        {
-            Database = new UnitOfWork();
-        }
+        private IUnitOfWork Database { get; set; }
 
         public MagazineService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;
         }
 
-        public OperationStatus Create(MagazineDTO magazineDTO, HostDTO author)
+        public OperationStatus Create(MagazineDTO magazineDTO, int authorId, int[] tags)
         {
             Magazine magazineCurrent = Database.MagazineRepository.GetOne(magazine => magazine.MagazineName == magazineDTO.MagazineName);
             log.Debug($"Author is trying to create magazine");
             if (magazineCurrent == null)
             {
-                //Host authorEdited = Database.HostRepository.GetById(author.Id);
-                //authorEdited.Magazines.Add(MagazineDTO.ToMagazine(magazineDTO));
-                //Database.HostRepository.Update(authorEdited);
-                var magazine = MagazineDTO.ToMagazine(magazineDTO, author.Id);
+                var magazine = MagazineDTO.ToMagazine(magazineDTO);
+                magazine.HostId = magazineDTO.HostId;
+                magazine.Tags = new List<Tag>();
+                magazine.PublishDate = DateTime.Now;
                 Database.MagazineRepository.Create(magazine);
-                log.Info($"Magazine with name: {magazineDTO.MagazineName} created succsesfully by auhtor with id: {author.Id} ");
+                var author = Database.HostRepository.GetById(authorId);
+                magazineCurrent = Database.MagazineRepository
+                    .GetOne(createdMagazine => createdMagazine.MagazineName == magazine.MagazineName);
+                author.Magazines.Add(magazineCurrent);
+                Database.HostRepository.Update(author);
+                if (tags != null)
+                {
+                    for (int i = 0; i < tags.Length; i++)
+                    {
+                        var tempTag = Database.TagRepository.GetById(tags[i]);
+                        tempTag.Magazines.Add(magazineCurrent);
+                        Database.TagRepository.Update(tempTag);
+                    }
+                }
+                log.Info($"Magazine with name: {magazineDTO.MagazineName} created succsesfully by auhtor with id: {authorId} ");
                 return new OperationStatus(true, "Create was succsesfull", "");
             }
             else
@@ -51,12 +59,16 @@ namespace Periodical.BL.Services
             }
         }
 
-        public OperationStatus Edit(MagazineDTO magazineDTO, int authorId)
+        public OperationStatus Edit(MagazineDTO magazineDTO, int authorId, int[] tags)
         {
             log.Debug($"Author is trying to edit magazine");
             if (magazineDTO != null)
             {
-                Database.MagazineRepository.Update(MagazineDTO.ToMagazine(magazineDTO, authorId));
+                var magazineEdited = MagazineDTO.ToMagazine(magazineDTO);
+                magazineEdited.Tags = new List<Tag>();
+                magazineEdited.PublishDate = DateTime.Now;
+                magazineEdited.HostId = authorId;
+                Database.MagazineRepository.Update(magazineEdited);
                 log.Info($"Magazine with id: {magazineDTO.Id} updated succsesfully by auhtor with id: {magazineDTO.HostId}");
                 return new OperationStatus(true, "Update was succsesfull", "");
             }
@@ -96,11 +108,6 @@ namespace Periodical.BL.Services
             log.Info($"Sent request to data base to delete magazine with id: {id}");
             Database.MagazineRepository.Delete(id);
             return new OperationStatus(true, "Delete was succsesfull", "");
-        }
-
-        public void Dispose()
-        {
-            Database.Dispose();
         }
     }
 }

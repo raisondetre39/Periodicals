@@ -20,7 +20,5 @@ namespace Periodical.BL.Services
         IEnumerable<HostDTO> GetAll();
 
         HostDTO GetById(int? id);
-
-        void Dispose();
     }
 }

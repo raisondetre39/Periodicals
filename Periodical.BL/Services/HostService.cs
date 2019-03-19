@@ -8,7 +8,6 @@ using System.Linq;
 
 namespace Periodical.BL.Services
 {
-
     /// <summary>
     /// Class creates service to magage all users operations in presentation layer
     /// </summary>
@@ -17,12 +16,7 @@ namespace Periodical.BL.Services
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
             (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        IUnitOfWork Database { get; set; }
-
-        public HostService()
-        {
-            Database = new UnitOfWork();
-        }
+        private IUnitOfWork Database { get; set; }
 
         public HostService(IUnitOfWork unitOfWork)
         {
@@ -152,11 +146,6 @@ namespace Periodical.BL.Services
                 .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
                 .ToList();
             return hostDTO;
-        }
-
-        public void Dispose()
-        {
-            Database.Dispose();
         }
     }
 }

@@ -75,7 +75,6 @@ namespace Periodicals.Areas.User.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditUser(HostDTO hostDTO)
         {
-            int er = ModelState.Values.Sum(erro => erro.Errors.Count);
             if (!ModelState.IsValid && ModelState.Values.Sum(error => error.Errors.Count) == 1)
             {
                 _hostService.Edit(hostDTO);

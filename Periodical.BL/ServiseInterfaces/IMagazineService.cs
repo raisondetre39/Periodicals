@@ -6,9 +6,9 @@ namespace Periodical.BL.ServiseInterfaces
 {
     public interface IMagazineService
     {
-        OperationStatus Create(MagazineDTO magazineDTO, HostDTO author);
+        OperationStatus Create(MagazineDTO magazineDTO, int authorId, int[] tags);
 
-        OperationStatus Edit(MagazineDTO magazineDTO, int authorId);
+        OperationStatus Edit(MagazineDTO magazineDTO, int authorId, int[] tags);
 
         MagazineDTO GetById(int? id);
 
@@ -17,7 +17,5 @@ namespace Periodical.BL.ServiseInterfaces
         IEnumerable<MagazineDTO> GetBy(string name);
 
         OperationStatus Delete(int? id);
-
-        void Dispose();
     }
 }
