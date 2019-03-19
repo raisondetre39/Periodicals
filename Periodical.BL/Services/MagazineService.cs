@@ -36,9 +36,9 @@ namespace Periodical.BL.Services
             log.Debug($"Author is trying to create magazine");
             if (magazineCurrent == null)
             {
-                Host authorEdited = Database.HostRepository.GetById(author.Id);
-                authorEdited.Magazines.Add(MagazineDTO.ToMagazine(magazineDTO));
-                Database.HostRepository.Update(authorEdited);
+                //Host authorEdited = Database.HostRepository.GetById(author.Id);
+                //authorEdited.Magazines.Add(MagazineDTO.ToMagazine(magazineDTO));
+                //Database.HostRepository.Update(authorEdited);
                 var magazine = MagazineDTO.ToMagazine(magazineDTO, author.Id);
                 Database.MagazineRepository.Create(magazine);
                 log.Info($"Magazine with name: {magazineDTO.MagazineName} created succsesfully by auhtor with id: {author.Id} ");

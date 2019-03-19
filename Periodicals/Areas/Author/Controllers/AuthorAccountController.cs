@@ -4,7 +4,9 @@ using Periodical.BL.Services;
 using Periodical.BL.ServiseInterfaces;
 using Periodicals.App_Start;
 using Periodicals.Controllers;
+using Periodicals.DAL.Publishings;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -54,13 +56,17 @@ namespace Periodicals.Areas.Author.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditAuthor(HostDTO hostDTO)
         {
-            hostDTO.Id = Convert.ToInt32(User.Identity.GetUserId());
-            hostDTO.Role = "Author";
-            _hostService.Edit(hostDTO);
-            log.Info($"User id: {hostDTO.Id} sent request to change profile information");
-            return AuthorAccount();
+            if (!ModelState.IsValid && ModelState.Values.Sum(error => error.Errors.Count) == 1)
+            {
+                hostDTO.Id = Convert.ToInt32(User.Identity.GetUserId());
+                hostDTO.Role = "Author";
+                _hostService.Edit(hostDTO);
+                log.Info($"User id: {hostDTO.Id} sent request to change profile information");
+                return AuthorAccount();
+            }
+            return View();
         }
-
+    
         public ActionResult DeleteAuthorMagazine(int? Id)
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
@@ -80,19 +86,29 @@ namespace Periodicals.Areas.Author.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditMagazine(MagazineDTO magazine, int[] selectedTags)
         {
+
+            ViewBag.Tags = _tagService.GetAll();
             magazine.Tags.Clear();
-            if (selectedTags != null)
-            {
-                foreach (var tag in _tagService.GetAll().Where(tag => selectedTags.Contains(tag.TagId)))
+                if (selectedTags != null)
                 {
-                    magazine.Tags.Add(tag);
+                    foreach (var tag in _tagService.GetAll().Where(tag => selectedTags.Contains(tag.TagId)))
+                    {
+                        magazine.Tags.Add(tag);
+                    }
                 }
+                else
+                {
+                    magazine.Tags = new List<Tag>() { _tagService.GetById(1) };
+                }
+            if (!ModelState.IsValid && ModelState.Values.Sum(error => error.Errors.Count) == 1)
+            {
+                magazine.PublishDate = DateTime.Now;
+                _magazineService.Edit(magazine, Convert.ToInt32(User.Identity.GetUserId()));
+                log.Info($"User id: {_hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()))} " +
+                    $" sent request to change magazine ( id: {magazine.Id} )");
+                return AuthorAccount();
             }
-            magazine.PublishDate = DateTime.Now;
-            _magazineService.Edit(magazine, Convert.ToInt32(User.Identity.GetUserId()));
-            log.Info($"User id: {_hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()))} " +
-                $" sent request to change magazine ( id: {magazine.Id} )");
-            return AuthorAccount();
+            return View();
         }
 
         public ActionResult CreateMagazine()
@@ -105,17 +121,23 @@ namespace Periodicals.Areas.Author.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateMagazine(MagazineDTO magazine, int[] selectedTags)
         {
-            if (selectedTags != null)
-            {
-                foreach (var tag in _tagService.GetAll().Where(tag => selectedTags.Contains(tag.TagId)))
+            ViewBag.Tags = _tagService.GetAll();
+
+                if (selectedTags != null)
                 {
-                    magazine.Tags.Add(tag);
+                    foreach (var tag in _tagService.GetAll().Where(tag => selectedTags.Contains(tag.TagId)))
+                    {
+                        magazine.Tags.Add(tag);
+                    }
                 }
+            if (!ModelState.IsValid && ModelState.Values.Sum(error => error.Errors.Count) == 3)
+            {
+                _magazineService.Create(magazine, _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId())));
+                log.Info($"User id: {_hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()))}" +
+                       $" sent reques to create new magazine");
+                return AuthorAccount();
             }
-            _magazineService.Create(magazine, _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId())));
-            log.Info($"User id: {_hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()))}" +
-                   $" sent reques to create new magazine");
-            return AuthorAccount();
+            return View();
         }
     }
 }

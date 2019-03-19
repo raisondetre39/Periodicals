@@ -31,9 +31,18 @@ namespace Periodicals.DAL.Repository
         /// </summary>
         public virtual void Create(TEntity entity)
         {
-            _dbContext.Set<TEntity>().Add(entity);
-            //_dbSet.Add(entity);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.Set<TEntity>().Add(entity);
+                //_dbSet.Add(entity);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                _dbSet.Add(entity);
+                _dbContext.SaveChanges();
+            }
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using Periodicals.App_Start;
 using Periodicals.Controllers;
 using Periodicals.Models;
 using System;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace Periodicals.Areas.User.Controllers
@@ -55,9 +56,13 @@ namespace Periodicals.Areas.User.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditWallet(DebitCardModel debitCardModel)
         {
-            _hostService.EditUserWallet(Convert.ToInt32(User.Identity.GetUserId()), debitCardModel.Sum);
-            log.Info($"User id: {Convert.ToInt32(User.Identity.GetUserId())} sent request to change wallet value");
-            return UserAccount();
+            if (ModelState.IsValid)
+            {
+                _hostService.EditUserWallet(Convert.ToInt32(User.Identity.GetUserId()), debitCardModel.Sum);
+                log.Info($"User id: {Convert.ToInt32(User.Identity.GetUserId())} sent request to change wallet value");
+                return UserAccount();
+            }
+            return View();
         }
 
         public ActionResult EditUser()
@@ -70,9 +75,14 @@ namespace Periodicals.Areas.User.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditUser(HostDTO hostDTO)
         {
-            _hostService.Edit(hostDTO);
-            log.Info($"User id: {hostDTO.Id} sent request to change profile information");
-            return UserAccount();
+            int er = ModelState.Values.Sum(erro => erro.Errors.Count);
+            if (!ModelState.IsValid && ModelState.Values.Sum(error => error.Errors.Count) == 1)
+            {
+                _hostService.Edit(hostDTO);
+                log.Info($"User id: {hostDTO.Id} sent request to change profile information");
+                return UserAccount();
+            }
+            return View();
         }
 
         /// <summary>

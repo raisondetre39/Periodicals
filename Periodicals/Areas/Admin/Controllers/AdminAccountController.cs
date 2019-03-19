@@ -5,6 +5,7 @@ using Periodical.BL.ServiseInterfaces;
 using Periodicals.App_Start;
 using Periodicals.Controllers;
 using System;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace Periodicals.Areas.Admin.Controllers
@@ -49,11 +50,15 @@ namespace Periodicals.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditAdmin(HostDTO hostDTO)
         {
-            hostDTO.Id = Convert.ToInt32(User.Identity.GetUserId());
-            hostDTO.Role = "Admin";
-            _hostService.Edit(hostDTO);
-            log.Info($"User id: {hostDTO.Id} sent request to change profile information");
-            return AdminAccount();
+            if (!ModelState.IsValid && ModelState.Values.Sum(error => error.Errors.Count) == 1)
+            {
+                hostDTO.Id = Convert.ToInt32(User.Identity.GetUserId());
+                hostDTO.Role = "Admin";
+                _hostService.Edit(hostDTO);
+                log.Info($"User id: {hostDTO.Id} sent request to change profile information");
+                return AdminAccount();
+            }
+            return View();
         }
 
         public ActionResult UnlockUser(int? Id)

@@ -54,8 +54,7 @@
                             @foreach (var tag in ViewBag.Tags)
                              {
                             <div class="tags">
-                                <input type="checkbox" name="selectedTags" value="@tag.TagId"
-                                       @(Model.Tags.Contains(tag) ? "checked=\"checked\"" : "") />
+                                <input type="checkbox" name="selectedTags" value="@tag.TagId"/>
                             </div>
                             @tag.TagName
                             

@@ -19,6 +19,7 @@
                         @Html.LabelFor(model => model.CardNumber)
                         <div>
                             @Html.TextBoxFor(model => model.CardNumber)
+                            <br />
                             @Html.ValidationMessageFor(model => model.CardNumber, "", new { @class = "text-danger" })
                         </div>
                     </div>
