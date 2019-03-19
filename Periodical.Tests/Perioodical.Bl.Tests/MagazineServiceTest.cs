@@ -102,7 +102,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
                 .Returns(_mockMagazineRepository.Object);
 
-            var result = _magazineService.Edit(null);
+            var result = _magazineService.Edit(null, 0);
 
             Assert.IsFalse(result.Succedeed);
         }
@@ -113,7 +113,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
                 .Returns(_mockMagazineRepository.Object);
 
-            var result = _magazineService.Edit(new MagazineDTO());
+            var result = _magazineService.Edit(new MagazineDTO(), 1);
 
             Assert.IsTrue(result.Succedeed);
         }

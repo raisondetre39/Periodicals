@@ -107,7 +107,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
                 .Returns(new[] { new Magazine() });
 
             _mockTagRepository.Setup(repository => repository.GetOne(It.IsAny<Func<Tag, bool>>()))
-                .Returns(new Tag() { TagName = tagName });
+                .Returns(new Tag() { TagName = tagName, Magazines = new List<Magazine>() { new Magazine() { Tags = new List<Tag>() { new Tag() { TagName = tagName } } } } });
 
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.TagRepository)
                 .Returns(_mockTagRepository.Object);

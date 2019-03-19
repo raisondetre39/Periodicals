@@ -8,7 +8,6 @@ using Periodical.BL.Infrastructure;
 using Periodicals.App_Start;
 using System;
 using Microsoft.AspNet.Identity;
-using System.Web;
 
 namespace Periodicals.Controllers
 {
@@ -22,7 +21,7 @@ namespace Periodicals.Controllers
 
         public AccountController() { }
 
-        public AccountController(HostService hostService)
+        public AccountController(IHostService hostService)
         {
             _hostService = hostService;
         }

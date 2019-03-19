@@ -6,7 +6,6 @@ using Periodicals.App_Start;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Periodicals.Controllers
@@ -21,7 +20,7 @@ namespace Periodicals.Controllers
         IHostService _hostService;
         IMagazineService _magazineService;
 
-        public HomeController(TagService tagService, HostService hostService, MagazineService magazineService )
+        public HomeController(ITagService tagService, IHostService hostService, IMagazineService magazineService )
         {
             _tagService = tagService;
             _hostService = hostService;

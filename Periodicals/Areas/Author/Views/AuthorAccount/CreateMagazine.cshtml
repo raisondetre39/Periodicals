@@ -41,7 +41,7 @@
                     <hr />
                     <div class="form-group">
                         @Html.LabelFor(model => model.Description, new { @class = "col-md-2 control-label", @id = "magDescriptionLabael" })
-                        <div >
+                        <div>
                             @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @id = "magDescription" })
                             @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                         </div>
@@ -59,8 +59,10 @@
                                 @tag.TagName
 
                             }
+
                         </div>
                     </div>
+                    <br />
                     <br />
                     <br />
                     <hr />

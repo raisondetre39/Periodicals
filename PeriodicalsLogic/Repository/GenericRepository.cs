@@ -1,4 +1,5 @@
 ﻿using Periodicals.DAL.DbHelpers;
+using Periodicals.DAL.Publishings;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -30,7 +31,8 @@ namespace Periodicals.DAL.Repository
         /// </summary>
         public virtual void Create(TEntity entity)
         {
-            _dbSet.Add(entity);
+            _dbContext.Set<TEntity>().Add(entity);
+            //_dbSet.Add(entity);
             _dbContext.SaveChanges();
         }
 
@@ -108,8 +110,8 @@ namespace Periodicals.DAL.Repository
         /// </summary>
         public virtual void Update(TEntity entity)
         {
-            _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            _dbSet.Attach(entity);
+            _dbContext.SaveChanges();           
         }
 
         public void Dispose()

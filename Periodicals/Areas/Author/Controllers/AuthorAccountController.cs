@@ -24,8 +24,8 @@ namespace Periodicals.Areas.Author.Controllers
 
         public AuthorAccountController() { }
 
-        public AuthorAccountController(TagService tagService, HostService hostService,
-            MagazineService magazineService, HostMagazineService hostMagazineService)
+        public AuthorAccountController(ITagService tagService, IHostService hostService,
+            IMagazineService magazineService, IHostMagazineService hostMagazineService)
         {
             _tagService = tagService;
             _hostService = hostService;

@@ -53,15 +53,9 @@ namespace Periodical.BL.Services
         public List<MagazineDTO> GetByTagName(string name)
         {
             log.Info($"Sent request to data base to get magazine contains tag with name: {name}");
-            Tag currentTag = Database.TagRepository.GetOne(tag => tag.TagName == name);
             List<Magazine> magazinesContainsCurrentTag = Database.TagRepository
                 .GetOne(tag => tag.TagName == name)
                 .Magazines;
-                
-
-            //List<Magazine> magazinesContainsCurrentTag = Database.MagazineRepository
-            //    .Get(magazine => magazine.Tags.Any(tag => tag.TagId == currentTag.TagId))
-            //    .ToList();
             if (magazinesContainsCurrentTag.Count > 0)
                 return magazinesContainsCurrentTag
                     .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))

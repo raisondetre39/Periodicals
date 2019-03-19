@@ -23,8 +23,8 @@ namespace Periodicals.Controllers
 
         public ShowMoreController() { }
 
-        public ShowMoreController(TagService tagService, HostService hostService,
-            MagazineService magazineService, HostMagazineService hostMagazineService)
+        public ShowMoreController(ITagService tagService, IHostService hostService,
+            IMagazineService magazineService, IHostMagazineService hostMagazineService)
         {
             _tagService = tagService;
             _hostService = hostService;

@@ -21,7 +21,7 @@ namespace Periodicals.Areas.Admin.Controllers
 
         public AdminAccountController() { }
 
-        public AdminAccountController(AdminService adminService, HostService hostService)
+        public AdminAccountController(IAdminService adminService, IHostService hostService)
         {
             _adminService = adminService;
             _hostService = hostService;

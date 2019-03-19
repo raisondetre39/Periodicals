@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Ninject;
 using Periodical.BL.Services;
+using Ninject.Web.Common;
+using Periodical.BL.ServiseInterfaces;
 
 namespace Periodical.BL.Infrastructure
 {
@@ -34,11 +36,11 @@ namespace Periodical.BL.Infrastructure
         /// </summary>
         public void AddBindings()
         {
-            kernel.Bind<HostService>().ToSelf();
-            kernel.Bind<MagazineService>().ToSelf();
-            kernel.Bind<HostMagazineService>().ToSelf();
-            kernel.Bind<TagService>().ToSelf();
-            kernel.Bind<AdminService>().ToSelf();
+            kernel.Bind<IHostService>().To<HostService>().InRequestScope();
+            kernel.Bind<IMagazineService>().To<MagazineService>().InRequestScope();
+            kernel.Bind<IHostMagazineService>().To<HostMagazineService>().InRequestScope();
+            kernel.Bind<ITagService>().To<TagService>().InRequestScope();
+            kernel.Bind<IAdminService>().To<AdminService>().InRequestScope();
         }
     }
 }

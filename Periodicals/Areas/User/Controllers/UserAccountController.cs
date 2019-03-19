@@ -23,7 +23,7 @@ namespace Periodicals.Areas.User.Controllers
 
         public UserAccountController() { }
 
-        public UserAccountController(HostService hostService, MagazineService magazineService, HostMagazineService hostMagazineService)
+        public UserAccountController(IHostService hostService, IMagazineService magazineService, IHostMagazineService hostMagazineService)
         {
             _hostService = hostService;
             _magazineService = magazineService;

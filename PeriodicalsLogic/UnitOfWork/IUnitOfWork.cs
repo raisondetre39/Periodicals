@@ -20,5 +20,7 @@ namespace Periodicals.DAL.UnitOfWork
         void Save();
 
         void Dispose();
+
+        void Dispose(bool disposed);
     }
 }

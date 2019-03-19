@@ -36,12 +36,10 @@ namespace Periodical.BL.Services
             log.Debug($"Author is trying to create magazine");
             if (magazineCurrent == null)
             {
-                //Host authorEdited = Database.HostRepository.GetById(author.Id);
-                //authorEdited.Magazines.Add(magazineCurrent);
-                //Database.HostRepository.Update(authorEdited);
+                Host authorEdited = Database.HostRepository.GetById(author.Id);
+                authorEdited.Magazines.Add(magazineCurrent);
+                Database.HostRepository.Update(authorEdited);
                 var magazine = MagazineDTO.ToMagazine(magazineDTO, author.Id);
-                //magazineCurrent.MagazineName = magazineDTO.MagazineName;
-                //magazine.Host = authorEdited;
                 Database.MagazineRepository.Create(magazine);
                 log.Info($"Magazine with name: {magazineDTO.MagazineName} created succsesfully by auhtor with id: {author.Id} ");
                 return new OperationStatus(true, "Create was succsesfull", "");
@@ -58,7 +56,6 @@ namespace Periodical.BL.Services
             log.Debug($"Author is trying to edit magazine");
             if (magazineDTO != null)
             {
-                
                 Database.MagazineRepository.Update(MagazineDTO.ToMagazine(magazineDTO, authorId));
                 log.Info($"Magazine with id: {magazineDTO.Id} updated succsesfully by auhtor with id: {magazineDTO.HostId}");
                 return new OperationStatus(true, "Update was succsesfull", "");
