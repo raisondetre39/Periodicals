@@ -16,6 +16,8 @@ namespace Periodical.BL.ServiseInterfaces
 
         IEnumerable<MagazineDTO> GetBy(string name);
 
+        IEnumerable<MagazineDTO> GetAuthorMagazines(int id);
+
         OperationStatus Delete(int? id);
     }
 }

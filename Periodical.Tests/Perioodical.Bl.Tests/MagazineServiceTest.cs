@@ -102,6 +102,11 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
         [TestMethod]
         public void Edit_ThereIsNoMagazineEdited_ReturnsOperationStatusFailure()
         {
+            const int tagId = 1;
+            _mockTagRepository.Setup(repository => repository.GetById(tagId))
+                .Returns(new Tag() { TagId = tagId });
+            _mockUnitOfWork.Setup(unitOfWork => unitOfWork.TagRepository)
+                 .Returns(_mockTagRepository.Object);
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
                 .Returns(_mockMagazineRepository.Object);
 
@@ -113,6 +118,11 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
         [TestMethod]
         public void Edit_ThereIsMagazineEdited_ReturnsOperationStatusSuccses()
         {
+            const int tagId = 1;
+            _mockTagRepository.Setup(repository => repository.GetById(tagId))
+                .Returns(new Tag() { TagId = tagId });
+            _mockUnitOfWork.Setup(unitOfWork => unitOfWork.TagRepository)
+                .Returns(_mockTagRepository.Object);
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
                 .Returns(_mockMagazineRepository.Object);
 

@@ -6,7 +6,7 @@ namespace Periodical.BL.ServiseInterfaces
 {
     public interface IHostMagazineService
     {
-        OperationStatus AddMagazine(HostDTO userDTO, int magasineId);
+        OperationStatus AddMagazine(HostDTO userDTO, int? magasineId);
 
         OperationStatus Delete(HostDTO userDTO, int? magasineId);
 

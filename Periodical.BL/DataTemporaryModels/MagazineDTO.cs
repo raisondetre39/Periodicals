@@ -13,15 +13,18 @@ namespace Periodical.BL.DataTemporaryModels
         public int Id { get; set; }
 
         [Display(Name = "Name")]
+        [Required(ErrorMessage = "Name can't be empty")]
         public string MagazineName { get; set; }
 
         public DateTime PublishDate { get; set; }
 
+        [Required(ErrorMessage = "Description can't be empty")]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
         [Range(1, 1000,
         ErrorMessage = "Value for {0} must be between {1} and {2}.")]
+        [Required(ErrorMessage = "Price can't be empty")]
         public int Price { get; set; }
 
         public string Cover { get; set; }

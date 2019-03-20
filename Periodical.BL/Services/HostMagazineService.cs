@@ -25,16 +25,20 @@ namespace Periodical.BL.Services
             Database = unitOfWork;
         }
 
-        public OperationStatus AddMagazine(HostDTO userDTO, int magasineId)
+        public OperationStatus AddMagazine(HostDTO userDTO, int? magasineId)
         {
             Host hostEdited = Database.HostRepository.GetById(userDTO.Id);
             Magazine magazineToAdd = Database.MagazineRepository.GetById(magasineId);
             log.Info($"User is trying to add to own list magazine");
-            if (hostEdited != null && magazineToAdd != null)
+            if (userDTO != null && magazineToAdd != null)
             {
                 hostEdited.Wallet -= magazineToAdd.Price;
-                hostEdited.Magazines.Add(magazineToAdd);
+                hostEdited.HostMagazine = null;
                 Database.HostRepository.Update(hostEdited);
+                Host hostToAdd = hostEdited;
+                hostToAdd.Id = userDTO.Id;
+                magazineToAdd.Hosts.Add(hostToAdd);
+                Database.MagazineRepository.Update(magazineToAdd);
                 log.Info($"Magazine with id: {magasineId} added succsesfully to user with id: {userDTO.Id}");
                 return new OperationStatus(true, "Changes were succsesfull", "");
             }
@@ -52,9 +56,7 @@ namespace Periodical.BL.Services
             log.Info($"User is trying to delete from own list magazine");
             if (hostEdited != null && magazine != null)
             {
-                hostEdited.Magazines.Remove(Database.MagazineRepository.GetById(magasineId));
-                magazine.Hosts.Remove(hostEdited);
-                Database.HostRepository.Update(hostEdited);
+                magazine.Hosts.Remove(magazine.Hosts.Single(userToFind => userToFind.Email == hostEdited.Email));
                 Database.MagazineRepository.Update(magazine);
                 log.Info($"Magazine with id {magasineId} deleted succsesfully by user with id: {userDTO.Id} ");
                 return new OperationStatus(true, "Changes were succsesfull", "");
@@ -69,10 +71,15 @@ namespace Periodical.BL.Services
         public IEnumerable<MagazineDTO> GetUserMagazines(int id)
         {
             log.Info($"Get all user`s ( id: {id} ) magazines");
-            return Database.HostRepository.GetById(id)
-                .Magazines
-                .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
-                .ToList();
+            List<Magazine> userList = new List<Magazine>();
+            foreach(var mag in Database.MagazineRepository.GetAll())
+            {
+                if(mag.Hosts.Any(host => host.Email == Database.HostRepository.GetById(id).Email))
+                {
+                    userList.Add(mag);
+                }
+            }
+            return userList.Select(magazine => MagazineDTO.ToMagazineDTO(magazine));
         }
     }
 }

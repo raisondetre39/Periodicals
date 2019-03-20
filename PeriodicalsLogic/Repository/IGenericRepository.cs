@@ -10,6 +10,8 @@ namespace Periodicals.DAL.Repository
 
         void Delete(int? id);
 
+        void Delete(TEntity entity);
+
         TEntity GetById(int? id);
 
         IEnumerable<TEntity> GetAll();

@@ -29,7 +29,7 @@ namespace Periodical.BL.Services
             log.Debug($"User is trying to create {role} profile");
             if (host == null)
             {
-                host = new Host { Email = hostDto.Email, Name = hostDto.Email, Role = role, Password = hostDto.Password, TryingsToEnter = 0};
+                host = new Host { Email = hostDto.Email, Name = hostDto.Name, Role = role, Password = hostDto.Password, TryingsToEnter = 0};
                 Database.HostRepository.Create(host);
                 Database.Save();
                 log.Info($"User with email: {host.Email} created profile succsesfuly");
@@ -89,6 +89,7 @@ namespace Periodical.BL.Services
                 hostEdited.Password = host.Password;
                 hostEdited.Name = host.Name;
                 hostEdited.Email = host.Email;
+                hostEdited.Role = host.Role;
                 Database.HostRepository.Update(hostEdited);
                 log.Info($"Host with id: {host.Id} update profile succsesfull");
                 return new OperationStatus(true, "Changes were succsesfull", "");
@@ -108,7 +109,6 @@ namespace Periodical.BL.Services
             {
                 host.Wallet += sum;
                 Database.HostRepository.Update(host);
-
                 log.Info($"Host with id: {host.Id} update profile succsesfull");
                 return new OperationStatus(true, "Changes were succsesfull", "");
             }

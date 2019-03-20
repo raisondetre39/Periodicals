@@ -26,7 +26,7 @@ namespace Periodicals.DAL.Repository
         /// <summary>
         ///  Method creates new instanse in dat base
         /// </summary>
-        public virtual void Create(TEntity entity)
+        public void Create(TEntity entity)
         {
              _dbContext.Set<TEntity>().Add(entity);
              _dbContext.SaveChanges();
@@ -35,16 +35,22 @@ namespace Periodicals.DAL.Repository
         /// <summary>
         ///  Method removes instance from data base
         /// </summary>
-        public virtual void Delete(int? id)
+        public void Delete(int? id)
         {
             _dbSet.Remove(_dbSet.Find(id));
+            _dbContext.SaveChanges();
+        }
+
+        public void Delete(TEntity entity)
+        {
+            _dbSet.Remove(entity);
             _dbContext.SaveChanges();
         }
 
         /// <summary>
         ///  Method retuns all TEntity instanses from data base
         /// </summary>
-        public virtual IEnumerable<TEntity> GetAll()
+        public IEnumerable<TEntity> GetAll()
         {
             return _dbSet.ToList();
         }
@@ -52,7 +58,7 @@ namespace Periodicals.DAL.Repository
         /// <summary>
         ///  Method retuns TEntity instanse by its id from data base
         /// </summary>
-        public virtual TEntity GetById(int? id)
+        public TEntity GetById(int? id)
         {
             try
             {
@@ -69,7 +75,7 @@ namespace Periodicals.DAL.Repository
         /// <summary>
         ///  Method retuns all TEntity instanses annaproperiate to paticular condition from data base
         /// </summary>
-        public virtual IEnumerable<TEntity> Get(Func<TEntity, bool> predicate)
+        public IEnumerable<TEntity> Get(Func<TEntity, bool> predicate)
         {
             try
             {
@@ -86,12 +92,12 @@ namespace Periodicals.DAL.Repository
         /// <summary>
         ///  Method retuns TEntity instanse match to paticular condition from data base
         /// </summary>
-        public virtual TEntity GetOne(Func<TEntity, bool> predicate)
+        public TEntity GetOne(Func<TEntity, bool> predicate)
         {
             try
             {
                 log.Info($"Request to get {typeof(TEntity)} by condition: {predicate} from databse");
-                return _dbSet.FirstOrDefault(predicate);
+                return _dbSet.Single(predicate);
             }
             catch (Exception ex)
             {
@@ -103,10 +109,11 @@ namespace Periodicals.DAL.Repository
         /// <summary>
         ///  Method updates TEntity instanse in data base
         /// </summary>
-        public virtual void Update(TEntity entity)
+        public void Update(TEntity entity)
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
             _dbContext.SaveChanges();
+            _dbContext.Entry(entity).State = EntityState.Detached;
         }
 
         public void Dispose()

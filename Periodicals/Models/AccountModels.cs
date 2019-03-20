@@ -13,7 +13,7 @@ namespace Periodicals.Models
         [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Invalid adress")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password couldn't be empty")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }

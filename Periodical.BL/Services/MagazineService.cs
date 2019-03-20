@@ -26,27 +26,21 @@ namespace Periodical.BL.Services
 
         public OperationStatus Create(MagazineDTO magazineDTO, int authorId, int[] tags)
         {
-            Magazine magazineCurrent = Database.MagazineRepository.GetOne(magazine => magazine.MagazineName == magazineDTO.MagazineName);
+            Magazine magazine = Database.MagazineRepository.GetOne(magazineCurrent => magazineCurrent.MagazineName == magazineDTO.MagazineName);
             log.Debug($"Author is trying to create magazine");
-            if (magazineCurrent == null)
+            if (magazine == null)
             {
-                var magazine = MagazineDTO.ToMagazine(magazineDTO);
+                magazine = MagazineDTO.ToMagazine(magazineDTO);
                 magazine.HostId = magazineDTO.HostId;
                 magazine.Tags = new List<Tag>();
                 magazine.PublishDate = DateTime.Now;
-                Database.MagazineRepository.Create(magazine);
-                var author = Database.HostRepository.GetById(authorId);
-                magazineCurrent = Database.MagazineRepository
-                    .GetOne(createdMagazine => createdMagazine.MagazineName == magazine.MagazineName);
-                author.Magazines.Add(magazineCurrent);
-                Database.HostRepository.Update(author);
                 if (tags != null)
                 {
-                    for (int i = 0; i < tags.Length; i++)
+                    foreach(var tag in tags.Select(tagId => Database.TagRepository.GetById(tagId)).ToList())
                     {
-                        var tempTag = Database.TagRepository.GetById(tags[i]);
-                        tempTag.Magazines.Add(magazineCurrent);
-                        Database.TagRepository.Update(tempTag);
+                        tag.TagMagazine = null;
+                        tag.Magazines.Add(magazine);
+                        Database.TagRepository.Update(tag);
                     }
                 }
                 log.Info($"Magazine with name: {magazineDTO.MagazineName} created succsesfully by auhtor with id: {authorId} ");
@@ -68,7 +62,16 @@ namespace Periodical.BL.Services
                 magazineEdited.Tags = new List<Tag>();
                 magazineEdited.PublishDate = DateTime.Now;
                 magazineEdited.HostId = authorId;
-                Database.MagazineRepository.Update(magazineEdited);
+                Database.MagazineRepository.Delete(magazineEdited.MagazineId);
+                if (tags != null)
+                {
+                    foreach (var tag in tags.Select(tagId => Database.TagRepository.GetById(tagId)).ToList())
+                    {
+                        tag.TagMagazine = null;
+                        tag.Magazines.Add(magazineEdited);
+                        Database.TagRepository.Update(tag);
+                    }
+                }
                 log.Info($"Magazine with id: {magazineDTO.Id} updated succsesfully by auhtor with id: {magazineDTO.HostId}");
                 return new OperationStatus(true, "Update was succsesfull", "");
             }
@@ -108,6 +111,14 @@ namespace Periodical.BL.Services
             log.Info($"Sent request to data base to delete magazine with id: {id}");
             Database.MagazineRepository.Delete(id);
             return new OperationStatus(true, "Delete was succsesfull", "");
+        }
+
+        public IEnumerable<MagazineDTO> GetAuthorMagazines(int authorId)
+        {
+            return Database.MagazineRepository
+                .Get(magazine => magazine.HostId == authorId)
+                .Select(magazine => MagazineDTO.ToMagazineDTO(magazine))
+                .ToList();
         }
     }
 }

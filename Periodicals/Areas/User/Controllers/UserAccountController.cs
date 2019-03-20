@@ -77,6 +77,7 @@ namespace Periodicals.Areas.User.Controllers
         {
             if (!ModelState.IsValid && ModelState.Values.Sum(error => error.Errors.Count) == 1)
             {
+                hostDTO.Role = "User";
                 _hostService.Edit(hostDTO);
                 log.Info($"User id: {hostDTO.Id} sent request to change profile information");
                 return UserAccount();

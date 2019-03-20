@@ -39,7 +39,7 @@ namespace Periodicals.Areas.Author.Controllers
         public ActionResult AuthorAccount()
         {
             HostDTO hostDTO = _hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()));
-            ViewBag.Magazines = _hostMagazineService.GetUserMagazines(hostDTO.Id);
+            ViewBag.Magazines = _magazineService.GetAuthorMagazines(hostDTO.Id);
             log.Info($"User id: {hostDTO.Id} opened author page");
             return View("AuthorAccount", hostDTO);
         }
@@ -112,9 +112,9 @@ namespace Periodicals.Areas.Author.Controllers
             ViewBag.Tags = _tagService.GetAll();
             if (!ModelState.IsValid && ModelState.Values.Sum(error => error.Errors.Count) == 3)
             {
-                var id = int.Parse(AuthenticationManager.User.Identity.GetUserId());
-                magazine.HostId = id;
-                _magazineService.Create(magazine, id, selectedTags);
+                var authorId = int.Parse(AuthenticationManager.User.Identity.GetUserId());
+                magazine.HostId = authorId;
+                _magazineService.Create(magazine, authorId, selectedTags);
                 log.Info($"User id: {_hostService.GetById(Convert.ToInt32(User.Identity.GetUserId()))}" +
                        $" sent reques to create new magazine");
                 return AuthorAccount();

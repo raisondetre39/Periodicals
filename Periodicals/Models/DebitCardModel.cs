@@ -7,9 +7,8 @@ namespace Periodicals.Models
     /// </summary>
     public class DebitCardModel
     {
-        [DataType(DataType.CreditCard)]
         [Display(Name = "Card number")]
-        [RegularExpression(@"[0-9]{12}", ErrorMessage = "Invalid card")]
+        [Required(ErrorMessage = "Card number couldn't be empty")]
         public int CardNumber { get; set; }
 
         [Display(Name = "EM")]

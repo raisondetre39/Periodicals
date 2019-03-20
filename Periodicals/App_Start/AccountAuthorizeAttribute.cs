@@ -1,5 +1,4 @@
-﻿using Microsoft.Owin.Security;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 
 namespace Periodicals.App_Start

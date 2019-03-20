@@ -10,9 +10,7 @@ nav {
     height: 70px;
 }
 
-nav {
-    padding-top: 5px;
-}
+nav {padding-top: 5px;}
 
 header nav ul, #userAccountPage nav ul {
     list-style: none; 
@@ -351,6 +349,7 @@ footer {
     width: 1200px;
     padding: 30px;
     margin-left: 10%;
+    margin-top: 0.5%;
 }
 
 #headerName5 a {
@@ -385,8 +384,8 @@ footer {
     font-size: 20px;
     font-family: OpenSans;
     background-color: rgba(49, 49, 49, 0.5);
-    padding: 10px 45px;
-    margin-left: 30%;
+    padding: 45px 45px;
+    margin-left: 29%;
 }
 
 #headerName6 h2 {
@@ -441,3 +440,5 @@ footer {
 }
 
 #Password1{ margin-left: 0;}
+
+#loginRedistration{ height: 800px;}

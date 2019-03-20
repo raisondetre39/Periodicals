@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -34,18 +33,14 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
         public void GetUserMagazines_UserHasTwoMagazines_ReturnsTwoMagazines()
         {
             const int userId = 1;
-            const int firstMagazineId = 1;
-            const int secondMagazineId = 2;
+            const string hostEmail = "email";
 
-            _mockMagazineRepository.Setup((repository => repository.GetById(firstMagazineId)))
-                .Returns(new Magazine());
-            _mockMagazineRepository.Setup((repository => repository.GetById(secondMagazineId)))
-                .Returns(new Magazine());
-            _mockMagazineRepository.Setup(repository => repository.Get(It.IsAny<Func<Magazine, bool>>()))
-                .Returns(new[] { new Magazine() { MagazineId = firstMagazineId }, new Magazine() { MagazineId = secondMagazineId } });
+            _mockMagazineRepository.Setup(repository => repository.GetAll())
+                .Returns(new[] { new Magazine() { Hosts = new List<Host>() { new Host() { Id = userId, Email = hostEmail} } },
+                    new Magazine() { Hosts = new List<Host>() { new Host() { Id = userId, Email = hostEmail } } } });
 
             _mockHostRepository.Setup(repository => repository.GetById(userId))
-                .Returns(new Host() { Id = userId, Magazines = new List<Magazine>() { new Magazine() { MagazineId = firstMagazineId }, new Magazine() { MagazineId = secondMagazineId } } });
+                .Returns(new Host() { Id = userId, Email = hostEmail });
 
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.HostRepository)
                 .Returns(_mockHostRepository.Object);
@@ -62,15 +57,9 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
         public void GetUserMagazines_UserHasNoMagazines_ReturnsNull()
         {
             const int userId = 1;
-            const int firstMagazineId = 1;
-            const int secondMagazineId = 2;
 
-            _mockMagazineRepository.Setup((repository => repository.GetById(firstMagazineId)))
-                .Returns(new Magazine());
-            _mockMagazineRepository.Setup((repository => repository.GetById(secondMagazineId)))
-                .Returns(new Magazine());
-            _mockMagazineRepository.Setup(repository => repository.Get(It.IsAny<Func<Magazine, bool>>()))
-                .Returns(() => new List<Magazine>());
+            _mockMagazineRepository.Setup(repository => repository.GetAll())
+                .Returns(() => new List<Magazine>() { new Magazine(), new Magazine()});
 
             _mockHostRepository.Setup(repository => repository.GetById(userId))
                 .Returns(new Host() { Id = userId });
@@ -90,10 +79,11 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
         public void Delete_ThereIsNoSuchUser_ReturnsOperationStatusFailure()
         {
             const int userId = 1;
+            const string userEmail = "email";
             const int magazineId = 1;
 
             _mockMagazineRepository.Setup((repository => repository.GetById(magazineId)))
-                .Returns(new Magazine());
+                .Returns(new Magazine() { Hosts = new List<Host>() { new Host() { Id = userId, Email = userEmail } } });
 
             _mockHostRepository.Setup(repository => repository.GetById(userId))
                 .Returns(() => null);
@@ -103,7 +93,7 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
                 .Returns(_mockMagazineRepository.Object);
 
-            var result = _hostMagazineService.Delete(new HostDTO() { Id = userId}, magazineId);
+            var result = _hostMagazineService.Delete(new HostDTO() { Id = userId, Email = userEmail}, magazineId);
 
             Assert.IsFalse(result.Succedeed);
         }
@@ -112,20 +102,21 @@ namespace Periodical.Tests.Perioodical.Bl.Tests
         public void Delete_ThereIsUser_ReturnsOperationStatusSuccses()
         {
             const int userId = 1;
+            const string userEmail = "email";
             const int magazineId = 1;
 
             _mockMagazineRepository.Setup((repository => repository.GetById(magazineId)))
-                .Returns(new Magazine());
+                .Returns(new Magazine() { Hosts = new List<Host>() { new Host() { Id = userId, Email = userEmail } } });
 
             _mockHostRepository.Setup(repository => repository.GetById(userId))
-                .Returns(new Host());
+                .Returns(new Host() { Id = userId, Email = userEmail });
 
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.HostRepository)
                 .Returns(_mockHostRepository.Object);
             _mockUnitOfWork.Setup(unitOfWork => unitOfWork.MagazineRepository)
                 .Returns(_mockMagazineRepository.Object);
 
-            var result = _hostMagazineService.Delete(new HostDTO() { Id = userId }, magazineId);
+            var result = _hostMagazineService.Delete(new HostDTO() { Id = userId, Email = userEmail }, magazineId);
 
             Assert.IsTrue(result.Succedeed);
         }

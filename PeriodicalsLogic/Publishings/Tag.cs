@@ -13,9 +13,12 @@ namespace Periodicals.DAL.Publishings
 
         public virtual List<Magazine> Magazines { get; set; }
 
+        public virtual List<TagMagazine> TagMagazine { get; set; }
+
         public Tag()
         {
             Magazines = new List<Magazine>();
+            TagMagazine = new List<TagMagazine>();
         }
     }
 }
