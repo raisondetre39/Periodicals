@@ -1,0 +1,68 @@
+﻿@model Periodicals.Models.DebitCardModel
+@{
+    ViewBag.Title = "Add money";
+    Layout = "~/Views/Shared/_LayoutPage(RegistrationLogin).cshtml";
+}
+
+<div id="headerName4">
+    <div id="headerContainer">
+
+        <div class="container">
+            <div class="row col-md-12">
+                <h2>@ViewBag.Title</h2>
+                @using (Html.BeginForm("EditWallet", "UserAccount", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <hr />
+                    <div class="row">
+                        @Html.LabelFor(model => model.CardNumber)
+                        <div>
+                            @Html.TextBoxFor(model => model.CardNumber)
+                            <br />
+                            @Html.ValidationMessageFor(model => model.CardNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row textBox">
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.ExpiryMounth)
+                            @Html.TextBoxFor(model => model.ExpiryMounth)
+                            @Html.ValidationMessageFor(model => model.ExpiryMounth, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.ExpiryYear)
+                            @Html.TextBoxFor(model => model.ExpiryYear)
+                            @Html.ValidationMessageFor(model => model.ExpiryMounth, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.CCV)
+                            @Html.TextBoxFor(model => model.CCV)
+                            @Html.ValidationMessageFor(model => model.CCV, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-sm-3">
+                            <img src="http://bootstraptema.ru/snippets/form/2016/form-card/card.png" />
+                        </div>
+                        <div class="row ">
+                            <div class="col-md-12 pad-adjust">
+                                <b>Enter sum you want to put on your account</b>
+                            </div>
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(model => model.Sum)
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row ">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <input type="submit" class="btn btn-default btn-block" value="PAY NOW" />
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                }
+            </div>
+     </div>
+</div>
+    </div>
+<link rel="stylesheet" href="http://bootstraptema.ru/plugins/2015/bootstrap3/bootstrap.min.css" />

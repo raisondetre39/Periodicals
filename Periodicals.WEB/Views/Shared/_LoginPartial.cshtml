@@ -1,0 +1,26 @@
+﻿
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul>
+            <li>@Html.RouteLink("Main", new { area = "", controller = "Home", action = "Index" })</li>
+            <li> | </li>
+            <li>@Html.RouteLink("Account", new { area = "", controller = "Home", action = "ChooseRole" })</li>
+            <li>|</li>
+            <li>@Html.RouteLink("Logout", new { area = "", controller = "Account", action = "Logout" })</li>
+        </ul>
+    }
+}
+else
+{
+        <ul>
+            <li>@Html.ActionLink("Main", "Index", "Home")</li>
+            <li class="manySeparator">|</li>
+            <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+            <li class="manySeparator">|</li>
+            <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        </ul>
+}

@@ -1,0 +1,86 @@
+﻿@model Periodical.BL.DataTemporaryModels.MagazineDTO
+
+@{
+    ViewBag.Title = "Change magazine";
+    Layout = "~/Views/Shared/_LayoutPage(RegistrationLogin).cshtml";
+}
+
+<div id="headerName6">
+    <div id="headerContainer">
+        <div class="container" id="magazineEditor">
+            <div class="row col-md-12">
+                <h2>@ViewBag.Title</h2>
+                @using (Html.BeginForm("CreateMagazine", "AuthorAccount", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.Cover)
+                    @Html.HiddenFor(model => model.HostId)
+                    @Html.HiddenFor(model => model.Hosts)
+                    @Html.HiddenFor(model => model.PublishDate)
+                    @Html.HiddenFor(model => model.Tags)
+                    <hr />
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.MagazineName, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.MagazineName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.MagazineName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br />
+                    <hr />
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Price, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.Price, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br />
+                    <hr />
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Description, new { @class = "col-md-2 control-label", @id = "magDescriptionLabael" })
+                        <div>
+                            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @id = "magDescription" })
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Tags, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-8">
+                            @foreach (var tag in ViewBag.Tags)
+                            {
+                                <div class="tags">
+                                    <input type="checkbox" name="selectedTags" value="@tag.TagId" />
+                                </div>
+                                @tag.TagName
+
+                            }
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <hr />
+                    <div class="row ">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <input type="submit" class="btn btn-default btn-block" value="Create" />
+                        </div>
+                    </div>
+                    <br />
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="http://bootstraptema.ru/plugins/2015/bootstrap3/bootstrap.min.css" />
+
+
+
+

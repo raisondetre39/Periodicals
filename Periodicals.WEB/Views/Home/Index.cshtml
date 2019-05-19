@@ -1,0 +1,58 @@
+﻿@model List<Periodical.BL.DataTemporaryModels.MagazineDTO>
+@{
+    ViewBag.Title = "Home Page";
+}
+<main id="allBooks">
+    <article id="bookBack">
+        <div id="filterContainer">
+            <h2 class="parName" id="parNameBooks">All magazines</h2>
+            <p class="parName">@ViewBag.Message</p>
+            <hr />
+            <div class="row">
+                    <span class="filterBlocks">
+                        @using (Html.BeginForm("SortBy", "Home", FormMethod.Post))
+                        {
+                            <input type="checkbox" name="orderByPrice" value="byPrice" class="filterCheck" /><span> Order by price </span>
+                            <input type="checkbox" name="orderByName" value="byName" class="filterCheck" /><span> Order by name </span>
+                            <input type="submit" value="Search" id="subBut2" class="filterBut"/>
+                        }
+                    </span>
+                    <span>|</span>
+                    <span class="filterBlocks">
+                        @using (Html.BeginForm("FindByTag", "Home", FormMethod.Post))
+                        {
+                            @Html.DropDownList("tags", new SelectList(ViewBag.Tags, "Tag"))
+                            <input type="submit" value="Search" id="subBut2" class="filterBut"/>
+                        }
+                    </span>
+                    <span>|</span>
+                    <span class="filterBlocks">
+                        @using (Html.BeginForm("FindByName", "Home", FormMethod.Post))
+                        {
+                            @Html.Label("Magazine name ")
+                            @Html.TextBox("Name")
+                            <input type="submit" value="Search" id="subBut2" class="filterBut"/>
+                        }
+                    </span>
+            </div>        
+            <hr />
+            </div>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <section class="userMagazine">
+                    <div id="magazinePhotoContainer">
+                    </div>
+                    <div id="userMagazineInfo">
+                        <h3><b>@Html.DisplayFor(model => model[i].MagazineName)</b></h3>
+                        <hr />
+                        <p><b>Publish date: </b>@Html.DisplayFor(model => model[i].PublishDate)</p>
+                        <hr />
+                        <b>Description: </b><br /><br />
+                        <p>@Html.DisplayFor(model => model[i].Description)</p>
+                        <div id="subBut2" class="userBtn">@Html.ActionLink("Show more", "ShowMore", "ShowMore", new { id = Html.DisplayFor(model => model[i].Id) }, new { target = "_blank" })</div>
+                        <hr />
+                    </div>
+                </section>
+            }
+</article>
+</main>
