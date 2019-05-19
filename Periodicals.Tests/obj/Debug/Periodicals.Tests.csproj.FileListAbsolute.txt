@@ -1,2 +1,0 @@
-C:\Users\detre\OneDrive\Рабочий стол\Epam Project\Periodicals\Periodicals.Tests\obj\Debug\Periodicals.Tests.csprojAssemblyReference.cache
-C:\Users\detre\OneDrive\Рабочий стол\Epam Project\Periodicals\Periodicals.Tests\obj\Debug\Periodicals.Tests.csproj.CoreCompileInputs.cache
